@@ -1,0 +1,19 @@
+{
+  "avoid": [
+    "Dedicapag",
+    "dedicapag.com"
+  ],
+  "app_store": {
+    "name": "AmorEterno: Dedicatorias",
+    "subtitle": "Cartas de amor interactivas",
+    "promotional_text": "Dedicatorias románticas interactivas con música, fotos y notas de voz para compartir por WhatsApp o imprimir en tarjeta con código QR.",
+    "description": "AmorEterno te permite crear dedicatorias y cartas de amor digitales e interactivas para emocionar a tu persona favorita.\n\nPersonaliza cada detalle sin que tus recuerdos caduquen a las pocas horas:\n- 35 plantillas temáticas interactivas (Candado del amor, Galaxia, Flores, Huellas, Cartas).\n- Sube tu canción favorita o elige melodías románticas integradas.\n- Graba una nota de voz real con tu micrófono para que escuche tus palabras al abrir el regalo.\n- Genera una tarjeta física con código QR lista para imprimir y colocar en un ramo de flores o caja de bombones.\n- Descarga un archivo HTML autónomo para guardar tu recuerdo para siempre.\n\nSin barreras de registro y sin suscripciones obligatorias.",
+    "keywords": "dedicatoria,carta,aniversario,pareja,regalo,novios,romantico,san valentin,detalles,qr",
+    "whats_new": "Lanzamiento oficial: 35 plantillas interactivas, notas de voz de micrófono y tarjetas QR imprimibles."
+  },
+  "google_play": {
+    "title": "AmorEterno: Dedicatorias",
+    "short_description": "Crea dedicatorias románticas interactivas con música, fotos y notas de voz.",
+    "full_description": "AmorEterno te permite crear dedicatorias y cartas de amor digitales e interactivas para emocionar a tu persona favorita.\n\nPersonaliza cada detalle sin que tus recuerdos caduquen a las pocas horas:\n- 35 plantillas temáticas interactivas (Candado del amor, Galaxia, Flores, Huellas, Cartas).\n- Sube tu canción favorita o elige melodías románticas integradas.\n- Graba una nota de voz real con tu micrófono para que escuche tus palabras al abrir el regalo.\n- Genera una tarjeta física con código QR lista para imprimir y colocar en un ramo de flores o caja de bombones.\n- Descarga un archivo HTML autónomo para guardar tu recuerdo para siempre.\n\nSin barreras de registro y sin suscripciones obligatorias."
+  }
+}

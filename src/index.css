@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #070913;
+    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+
+  .font-romantic {
+    font-family: 'Dancing Script', cursive;
+  }
+
+  .font-serif-romance {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+/* Glassmorphism effects */
+.glass-panel {
+  background: rgba(18, 22, 43, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(22, 27, 54, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 63, 94, 0.15);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(244, 63, 94, 0.25);
+}
+
+/* Perspective 3D */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+/* ============ Decoración premium compartida ============ */
+@keyframes dp-fall {
+  0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate3d(var(--drift, 30px), 110vh, 0) rotate(var(--spin, 360deg)); opacity: 0; }
+}
+@keyframes dp-rise {
+  0%   { transform: translate3d(0, 10vh, 0) scale(0.6); opacity: 0; }
+  15%  { opacity: 0.9; }
+  100% { transform: translate3d(var(--drift, -30px), -110vh, 0) scale(1.1); opacity: 0; }
+}
+@keyframes dp-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+@keyframes dp-aurora {
+  0%, 100% { transform: translate(-10%, -5%) scale(1); }
+  33%      { transform: translate(8%, 6%) scale(1.15); }
+  66%      { transform: translate(-4%, 10%) scale(0.95); }
+}
+@keyframes dp-shine {
+  0%   { transform: translateX(-120%) skewX(-20deg); }
+  60%, 100% { transform: translateX(220%) skewX(-20deg); }
+}
+@keyframes dp-reveal {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes dp-heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.12); }
+  30% { transform: scale(0.98); }
+  45% { transform: scale(1.08); }
+}
+@keyframes dp-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+@keyframes dp-halo {
+  0%   { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes dp-gold-text {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes dp-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-4px) rotate(-2deg); }
+  75% { transform: translateX(4px) rotate(2deg); }
+}
+
+.dp-particle { position: absolute; top: 0; will-change: transform, opacity; pointer-events: none; }
+.dp-fall { animation: dp-fall linear infinite; }
+.dp-rise { animation: dp-rise linear infinite; top: auto; bottom: 0; }
+.dp-twinkle { animation: dp-twinkle ease-in-out infinite; }
+.dp-aurora { animation: dp-aurora 18s ease-in-out infinite; }
+.dp-reveal { animation: dp-reveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.dp-heartbeat { animation: dp-heartbeat 1.6s ease-in-out infinite; }
+.dp-sway { animation: dp-sway 4s ease-in-out infinite; transform-origin: bottom center; }
+.dp-shake { animation: dp-shake 0.35s ease-in-out; }
+.dp-halo::before, .dp-halo::after {
+  content: ''; position: absolute; inset: 0; border-radius: 9999px;
+  border: 2px solid currentColor; animation: dp-halo 2.4s ease-out infinite; pointer-events: none;
+}
+.dp-halo::after { animation-delay: 1.2s; }
+.dp-shine { position: relative; overflow: hidden; }
+.dp-shine::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: dp-shine 3.5s ease-in-out infinite; pointer-events: none;
+}
+.dp-gold-text {
+  background: linear-gradient(90deg, #fde68a, #f9a8d4, #fff7ed, #fcd34d, #fde68a);
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: dp-gold-text 6s linear infinite;
+}
+.dp-paper {
+  background-color: #fdf8ee;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.9), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(244,214,170,0.35), transparent 50%),
+    repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(190,150,110,0.12) 28px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-fall, .dp-rise, .dp-twinkle, .dp-aurora, .dp-heartbeat, .dp-sway,
+  .dp-shine::after, .dp-halo::before, .dp-halo::after, .dp-gold-text { animation: none !important; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090b16;
+}
+::-webkit-scrollbar-thumb {
+  background: #272d47;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f43f5e;
+}

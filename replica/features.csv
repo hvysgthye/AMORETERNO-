@@ -1,0 +1,21 @@
+feature,area,priority,original,clone,notes
+Catalogo de 35 plantillas tematicas interactivas,catalog,must,yes,yes,35 plantillas recreadas con diseno de lujo y micro-interacciones
+Editor multi-paso reactivo en vivo,editor,must,yes,yes,Wizard en 3 pasos con actualizacion instantanea a 60fps
+Previsualizacion split-screen con marcos de dispositivos,preview,must,no,yes,0ms de latencia con marcos de celular tablet y PC
+Combinacion numerica para desbloquear candado,interaction,must,yes,yes,Diales 3D interactivos con sonido mecanico Web Audio API
+Subida de foto especial en marco Polaroid,media,must,yes,yes,Compresion automatica client-side con canvas a ~150KB
+Carta de amor con apertura cinematica y confeti,interaction,must,yes,yes,Diseno de sobre de papel y animacion de confeti
+Subida de musica personalizada MP3 o WAV,audio,must,no,yes,En la original cobran extra; en NextGen es libre y sin restricciones
+Sintesis de melodias romanticas integradas,audio,should,no,yes,4 presets generados en tiempo real para usuarios sin MP3
+Grabadora de notas de voz con microfono,audio,must,no,yes,Hasta 45s de voz real grabada directo en el navegador
+Selector de efectos y atmosfera flotante,effects,should,no,yes,5 opciones: corazones estrellas sakura luciernagas y nieve
+Enlace directo permanente sin base de datos,sharing,must,no,yes,Codificacion Base64 URL sin caducidad de 12 horas
+Generador de tarjeta de regalo imprimible con QR,sharing,must,no,yes,Descarga de PNG 800x1050 px para adjuntar a flores o chocolates
+Botones de compartir en un clic a WhatsApp y Telegram,sharing,must,yes,yes,Mensaje prediseñado con emojis y formato enriquecido
+Simulador interactivo de tarjeta en WhatsApp,sharing,should,no,yes,Mockup en tiempo real de la burbuja de chat
+Modo destinatario inmersivo a pantalla completa,recipient,must,yes,yes,Presentacion sin barras de edicion ni distracciones
+Exportacion a archivo HTML autonomo offline,export,must,no,yes,Archivo independiente de 39KB reproducible de por vida sin internet
+Historial de creaciones guardadas en el navegador,history,should,no,yes,Guarda hasta 20 dedicatorias en localStorage sin pedir cuenta
+Firma y personalizacion libre de marcas forzadas,branding,must,no,yes,Sin paywall para quitar marcas de agua
+Cobro forzoso a las 12 horas,monetization,could,yes,skip,Modelo abusivo rechazado intencionalmente para democratizar el acceso
+Anuncios publicitarios invasivos y rastreadores Monetag,privacy,could,yes,skip,0 anuncios y 0 rastreadores en la version NextGen

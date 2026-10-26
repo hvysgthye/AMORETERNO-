@@ -1,0 +1,96 @@
+{
+  "_about": "Themes for Dedicapag and romantic dedication web apps.",
+  "request_patterns": [
+    "\\b(quisiera|desearía|ojalá|me gustaría|podrían agregar)\\b",
+    "\\bpor favor agreguen\\b",
+    "\\bsería (bueno|genial|hermoso|increíble|útil)\\b",
+    "\\bme encantaría\\b",
+    "\\bnecesita (un|una|más)\\b",
+    "\\bno hay forma de\\b",
+    "\\bno hay opción\\b",
+    "\\bno (puedo|deja|permite) (subir|descargar|guardar|personalizar|quitar|poner|escuchar)\\b",
+    "\\bfalta\\b",
+    "\\bno tiene\\b",
+    "\\bdebería (tener|dejar|poder)\\b",
+    "\\bi wish\\b",
+    "\\bplease add\\b",
+    "\\bwould be (nice|great|good|helpful)\\b",
+    "\\bwould love\\b",
+    "\\bno way to\\b",
+    "\\bmissing\\b"
+  ],
+  "themes": [
+    {
+      "id": "pricing",
+      "label": "Precio, cobros obligatorios y expiración de 12 horas",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(caro|costoso|precio|cobro|cobran|pagar|pago|suscripción|dólares|usd)\\b",
+        "\\b(expir|venc|caduc|12 horas|borra|desaparece|tiempo límite)\\b",
+        "\\b(paywall|expensive|subscription|per month|free tier|upgrade)\\b"
+      ]
+    },
+    {
+      "id": "billing",
+      "label": "Falta de métodos de pago locales (PayPal / Tarjetas en USD)",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(tarjeta de crédito|sin tarjeta|paypal|no tengo tarjeta|estudiantes|adolescentes|yape|pesos|latam)\\b",
+        "\\b(charged|refund|credit card)\\b"
+      ]
+    },
+    {
+      "id": "bugs",
+      "label": "Imágenes pesadas bloquean o congelan la vista previa",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(pesad[ao]s?|foto|imagen|congel|bloquea|no carga|error|pantalla negra|se traba|mb)\\b",
+        "\\b(crash|bug|freeze|broken|doesn't work|glitch)\\b"
+      ]
+    },
+    {
+      "id": "offline_export",
+      "label": "Sin descarga offline ni propiedad permanente (Dependencia de servidor)",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(descarg|offline|guardar|archivo|html|servidor caído|cerrar|para siempre|permanente)\\b",
+        "\\b(export|offline|keep forever|backup)\\b"
+      ]
+    },
+    {
+      "id": "music_custom",
+      "label": "Cobro extra o restricciones para subir música propia",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(música|canción|cancion|mp3|audio|propia música|canción favorita|subir música)\\b",
+        "\\b(music|song|audio file)\\b"
+      ]
+    },
+    {
+      "id": "watermark",
+      "label": "Marca de agua obligatoria invasiva",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(marca de agua|logo grande|quitar marca|firma|watermark|branding)\\b"
+      ]
+    },
+    {
+      "id": "voice_note",
+      "label": "Falta de nota de voz grabada con micrófono",
+      "kind": "request",
+      "patterns": [
+        "\\b(voz|nota de voz|mensaje de voz|grabar voz|micrófono|audio propio)\\b",
+        "\\b(voice note|record voice|microphone)\\b"
+      ]
+    },
+    {
+      "id": "physical_gift",
+      "label": "Falta de tarjetas físicas con Código QR para regalos reales",
+      "kind": "request",
+      "patterns": [
+        "\\b(código qr|qr|imprimir|tarjeta|ramo|flores|chocolates|carta física|regalo físico)\\b",
+        "\\b(qr code|printable card|physical gift)\\b"
+      ]
+    }
+  ]
+}

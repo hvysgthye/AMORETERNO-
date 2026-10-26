@@ -1,0 +1,38 @@
+:root {
+  /* Colors */
+  --dp-bg: #070914;
+  --dp-surface: #0c1024;
+  --dp-surface-glass: #131838;
+  --dp-border: #2b3456;
+  --dp-border-input: #94a3b8;
+  --dp-text: #ffffff;
+  --dp-text-muted: #cbd5e1;
+  --dp-text-rose: #fda4af;
+  --dp-text-gold: #fde68a;
+  --dp-accent: #e11d48;
+  --dp-accent-gold: #f59e0b;
+  --dp-on-accent: #ffffff;
+  --dp-danger: #f43f5e;
+  --dp-success: #10b981;
+
+  /* Fonts */
+  --dp-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --dp-font-serif: 'Playfair Display', Georgia, serif;
+  --dp-font-cursive: 'Dancing Script', cursive;
+  --dp-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radii */
+  --dp-radius-sm: 8px;
+  --dp-radius-md: 14px;
+  --dp-radius-lg: 24px;
+  --dp-radius-full: 9999px;
+
+  /* Shadows */
+  --dp-shadow-glow-rose: 0 10px 30px -10px rgba(225, 29, 72, 0.4);
+  --dp-shadow-glow-gold: 0 10px 30px -10px rgba(245, 158, 11, 0.35);
+  --dp-shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+
+  /* Transitions */
+  --dp-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --dp-transition-base: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
