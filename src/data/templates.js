@@ -8,6 +8,7 @@ export const CATEGORIES = [
   'Flores & Naturaleza',
   'Biometría & Luces',
   'Juegos & Dinámicas',
+  'Retro & Nostalgia',
   'Especiales & Regalos'
 ];
 
@@ -759,6 +760,217 @@ export const TEMPLATES = [
       photo: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80',
       customAudio: null,
       musicTitle: 'Enchanted Spooky Waltz'
+    }
+  },
+  // --- NUEVAS 10 PLANTILLAS VIRALES & TENDENCIA 2026 ---
+  {
+    id: 'cassette-retro',
+    name: 'Mixtape Vintage (Casete 90s)',
+    category: 'Retro & Nostalgia',
+    badge: 'Viral en TikTok',
+    rating: '5.0 (6.1k)',
+    description: 'Cinta de casete retro con carretes giratorios mecánicos, etiqueta analógica manuscrita, barras de ecualizador fluorescentes y reproducción de tu melodía o notas de voz.',
+    previewGradient: 'from-zinc-900 via-rose-950 to-black',
+    accentColor: '#f43f5e',
+    features: ['Carretes analógicos giratorios', 'Etiqueta personalizada manuscrita', 'Barras de ecualizador dinámicas', 'Efecto sonido de cinta magnética'],
+    defaults: {
+      title: 'Lado A: Canciones Para Ti',
+      lockTitle: 'Toca el casete para insertar y presionar PLAY',
+      unlockMsg: '¡Reproduciendo nuestro amor!',
+      letterTitle: 'Nuestra Vida Tiene Su Propia Banda Sonora',
+      letterBody: 'Si cada momento contigo fuera una canción, tendríamos el disco más hermoso del mundo. Gracias por ser la mejor melodía de mis días.',
+      photo: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Sunset Rhodes Ballad'
+    }
+  },
+  {
+    id: 'star-map',
+    name: 'Mapa Estelar: El Cielo de Nuestra Noche',
+    category: 'Cósmicas & Mágicas',
+    badge: 'Top Aniversarios',
+    rating: '5.0 (5.8k)',
+    description: 'Cielo astronómico de la noche exacta en que se conocieron. Constelaciones trazadas con polvo estelar dorado, coordenadas de su lugar especial y una luna resplandeciente.',
+    previewGradient: 'from-slate-950 via-indigo-950 to-blue-950',
+    accentColor: '#fbbf24',
+    features: ['Carta celeste astronómica', 'Constelaciones con líneas doradas', 'Coordenadas geográficas lat/long', 'Fase lunar animada'],
+    defaults: {
+      title: 'Bajo Estas Mismas Estrellas',
+      lockTitle: 'Alinea las constelaciones de nuestro destino',
+      unlockMsg: '¡El universo conspiró a nuestro favor!',
+      letterTitle: 'La Noche en que Cambió Mi Universo',
+      letterBody: 'Dicen que los átomos de nuestros cuerpos provienen de estrellas que explotaron hace millones de años. Por eso encontrarte no fue casualidad, sino el reencuentro más esperado.',
+      photo: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Starlight Symphony'
+    }
+  },
+  {
+    id: 'polaroid-album',
+    name: 'Tendedero de Fotos Polaroid',
+    category: 'Retro & Nostalgia',
+    badge: 'Ultra Romántico',
+    rating: '4.9 (4.5k)',
+    description: 'Fotos instantáneas Polaroid colgadas de un cordel con broches de madera iluminados por lucecitas cálidas (fairy lights). Al tocarlas se revelan tus mejores recuerdos juntos.',
+    previewGradient: 'from-rose-950 via-red-900 to-amber-950',
+    accentColor: '#f43f5e',
+    features: ['Fotos estilo Polaroid instantáneo', 'Fairy lights cálidas titilantes', 'Broches de madera rústicos', 'Revelado fotográfico gradual'],
+    defaults: {
+      title: 'Nuestros Recuerdos Colgados del Corazón',
+      lockTitle: 'Toca las fotos para revelar nuestros momentos',
+      unlockMsg: '¡Cada foto contigo es mi tesoro!',
+      letterTitle: 'Un Instante Que Se Volvió Eterno',
+      letterBody: 'Las fotos capturan un segundo, pero lo que siento por ti dura toda la vida. Gracias por llenar mi vida de sonrisas y momentos inolvidables.',
+      photo: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Acoustic Love Memories'
+    }
+  },
+  {
+    id: 'mensaje-botella',
+    name: 'Mensaje en una Botella en el Océano',
+    category: 'Especiales & Regalos',
+    badge: 'Poesía & Mar',
+    rating: '4.9 (3.9k)',
+    description: 'Botella de cristal náutica flotando sobre olas oceánicas al atardecer. Retira el corcho de madera para extraer el pergamino enrollado con lazo rojo y leer la carta de amor.',
+    previewGradient: 'from-sky-900 via-cyan-950 to-slate-950',
+    accentColor: '#38bdf8',
+    features: ['Físicas de oleaje marino suave', 'Botella de vidrio translúcida', 'Descorche interactivo con sonido', 'Pergamino antiguo desenrollable'],
+    defaults: {
+      title: 'Un Mensaje Lanzado a Tu Destino',
+      lockTitle: 'Destapa la botella que trajeron las olas',
+      unlockMsg: '¡El mensaje llegó a su verdadero puerto!',
+      letterTitle: 'Naufragué en Tu Mirada',
+      letterBody: 'Si mi amor por ti fuera agua de mar, no alcanzarían todos los océanos del planeta para contenerlo. Llegaste a mi vida como la marea más hermosa.',
+      photo: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Ocean Breeze Serenade'
+    }
+  },
+  {
+    id: 'girasoles-sunset',
+    name: 'Campo de Girasoles al Atardecer',
+    category: 'Flores & Naturaleza',
+    badge: 'Tendencia de Oro',
+    rating: '5.0 (7.2k)',
+    description: 'Campo dorado de girasoles bañados por la luz dorada del atardecer. Los girasoles giran buscando tu mirada mientras una lluvia de polen dorado ilumina su amor.',
+    previewGradient: 'from-amber-800 via-yellow-950 to-stone-950',
+    accentColor: '#facc15',
+    features: ['Girasoles dorados ilustrados en alta definición', 'Luz de hora dorada (Golden Hour)', 'Partículas de polen y destellos cálidos', 'Símbolo eterno de lealtad y alegría'],
+    defaults: {
+      title: 'Tú Eres Mi Sol en Cada Atardecer',
+      lockTitle: 'Toca los girasoles para que sigan tu luz',
+      unlockMsg: '¡Como los girasoles al sol, siempre te elijo a ti!',
+      letterTitle: 'Para Quien Ilumina Mis Días Más Grises',
+      letterBody: 'Así como los girasoles nunca pierden de vista al sol, mi corazón nunca deja de buscarte. Eres mi luz, mi paz y mi mayor alegría.',
+      photo: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Golden Sunset Waltz'
+    }
+  },
+  {
+    id: 'boarding-pass',
+    name: 'Pase de Abordar: Vuelo al Amor',
+    category: 'Retro & Nostalgia',
+    badge: 'Especial Viajeros',
+    rating: '4.9 (3.6k)',
+    description: 'Boleto de avión de primera clase hacia tu corazón. Con código de barras, asiento en primera fila, compuerta de embarque y sello de pasaporte de amor sellado al instante.',
+    previewGradient: 'from-indigo-900 via-slate-900 to-rose-950',
+    accentColor: '#e11d48',
+    features: ['Formato de billete de avión auténtico', 'Sello de pasaporte interactivo', 'Código de barras romántico escaneable', 'Destino: Para Siempre'],
+    defaults: {
+      title: 'Boleto Directo a Mi Corazón',
+      lockTitle: 'Estampa tu pase de abordar para despegar',
+      unlockMsg: '¡Pasajero VIP admitido para toda la vida!',
+      letterTitle: 'El Mejor Viaje Comenzó a Tu Lado',
+      letterBody: 'De todas las ciudades, países y destinos posibles en este planeta, el único lugar en el que siempre quiero aterrizar es en tus brazos. Buen vuelo hacia nuestra eternidad.',
+      photo: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Skyline Romance'
+    }
+  },
+  {
+    id: 'scratch-card',
+    name: 'Rasca y Gana del Amor',
+    category: 'Juegos & Dinámicas',
+    badge: 'Súper Divertido',
+    rating: '4.9 (4.8k)',
+    description: 'Tarjeta de raspadita dorada con tres zonas secretas. Raspa con el dedo o ratón soltando virutas brillantes hasta descubrir el premio mayor: ¡Mi corazón entero para ti!',
+    previewGradient: 'from-fuchsia-950 via-purple-900 to-amber-950',
+    accentColor: '#facc15',
+    features: ['Efecto de raspado con virutas doradas', '3 casillas con premios sorpresa', 'Mecánica lúdica adictiva', 'Sonido de raspado y victoria'],
+    defaults: {
+      title: 'Rasca y Descubre Tu Premio',
+      lockTitle: 'Raspa las estrellas doradas para descubrir qué ganaste',
+      unlockMsg: '¡Felicidades! Ganaste mi amor para siempre.',
+      letterTitle: 'El Premio Mayor de Mi Vida Eres Tú',
+      letterBody: 'Dicen que ganarse la lotería es casi imposible, pero yo siento que gané la más grande del mundo el día en que llegaste a mi vida. Te amo con todo lo que soy.',
+      photo: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Celebration of Love'
+    }
+  },
+  {
+    id: 'gameboy-8bit',
+    name: 'Amor Pixel Art (Game Boy Retro)',
+    category: 'Retro & Nostalgia',
+    badge: 'Gamer Love',
+    rating: '5.0 (6.7k)',
+    description: 'Consola portátil retro estilo 8-bits con pantalla verde de fósforo, corazones de vida pixelados que se recargan al 100% y efectos chiptune nostálgicos.',
+    previewGradient: 'from-slate-900 via-slate-800 to-emerald-950',
+    accentColor: '#84cc16',
+    features: ['Consola portátil retro ilustrada', 'Pantalla LCD verde con corazones 8-bit', 'Cruceta y botones A/B presionables', 'Sonidos chiptune de subida de nivel'],
+    defaults: {
+      title: 'Player 1 & Player 2: Connected',
+      lockTitle: 'Presiona START en la consola para iniciar la partida',
+      unlockMsg: '¡Nivel de Amor: 100% (HP Máximo)!',
+      letterTitle: 'Mi Compañero/a de Equipo Favorito/a',
+      letterBody: 'La vida es como un videojuego lleno de niveles difíciles, pero contigo a mi lado no hay boss ni obstáculo que no podamos vencer. Gracias por ser mi Player 2 eterno.',
+      photo: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Chiptune Heartbeat'
+    }
+  },
+  {
+    id: 'origami-grulla',
+    name: 'Grulla de Origami & Sakura',
+    category: 'Flores & Naturaleza',
+    badge: 'Paz & Belleza Zen',
+    rating: '4.9 (3.4k)',
+    description: 'Tradición de las 1,000 grullas de papel japonesas (Senbazuru). Una grulla de origami blanca y oro rosa bate sus alas suavemente entre flores de cerezo (Sakura) flotantes.',
+    previewGradient: 'from-pink-950 via-rose-900 to-neutral-950',
+    accentColor: '#f472b6',
+    features: ['Grulla de origami 3D con pliegues geométricos', 'Lluvia de pétalos de flor de cerezo (Sakura)', 'Estética japonesa zen y elegante', 'Mensaje de deseo eterno cumplido'],
+    defaults: {
+      title: 'Un Deseo Hecho de Papel y Alma',
+      lockTitle: 'Toca las alas de la grulla para que despliegue su mensaje',
+      unlockMsg: '¡El deseo de las mil grullas se ha cumplido!',
+      letterTitle: 'Cada Pliegue Guarda Una Razón Para Amarte',
+      letterBody: 'Cuenta la leyenda que quien pliega una grulla con el corazón puede pedir un deseo que durará por siempre. Mi único deseo fue encontrarte, y mi promesa es cuidarte toda la vida.',
+      photo: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Sakura Garden Serenade'
+    }
+  },
+  {
+    id: 'reloj-arena',
+    name: 'Reloj de Arena del Tiempo Eterno',
+    category: 'Románticas & Mecánicas',
+    badge: 'Amor Infinito',
+    rating: '5.0 (4.9k)',
+    description: 'Reloj de arena victoriano de cristal y bronce dorado. Su arena hecha de polvo de estrellas rosadas cae lentamente mientras un símbolo de infinito sella su amor por toda la eternidad.',
+    previewGradient: 'from-amber-950 via-stone-900 to-black',
+    accentColor: '#fbbf24',
+    features: ['Reloj de arena victoriano con columnas talladas', 'Arena de polvo de estrellas en cascada suave', 'Símbolo de infinito reluciente', 'Frase grabada: Nuestro Tiempo Es Eterno'],
+    defaults: {
+      title: 'Un Amor Que Detiene el Tiempo',
+      lockTitle: 'Gira el reloj de arena para detener las horas',
+      unlockMsg: '¡El tiempo se detuvo en nuestro amor!',
+      letterTitle: 'Si Tuviera Que Elegir Otra Vez',
+      letterBody: 'El tiempo pasa rápido para el resto del mundo, pero cuando estoy contigo, cada segundo se siente infinito y sagrado. Te amo hoy, mañana y en todas las vidas que vengan.',
+      photo: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80',
+      customAudio: null,
+      musicTitle: 'Timeless Romance'
     }
   }
 ];
