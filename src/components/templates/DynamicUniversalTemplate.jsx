@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 import { sound } from '../../utils/audioHelper';
 import { Sparkles } from 'lucide-react';
 import { TEMPLATES } from '../../data/templates';
-import { AmbientLayer, MusicDisc, LoveLetterCard } from './shared/Decor';
+import { AmbientLayer, MusicDisc, LoveLetterCard, resolveText, resolvePhotos } from './shared/Decor';
 
 /* ------------------------------------------------------------------
    Plantilla universal temática.
@@ -1037,6 +1037,18 @@ export default function DynamicUniversalTemplate({ templateId, data }) {
     setUnlocked(false);
   }
 
+  // 100% Editable and Removable field resolution
+  const badgeText = resolveText(data?.badgeText, currentTemplate.name);
+  const titleText = resolveText(data?.title, currentTemplate.defaults.title);
+  const lockSubtitle = resolveText(data?.lockStatus ?? data?.lockTitle, currentTemplate.defaults.lockTitle);
+  const unlockSubtitle = resolveText(data?.unlockMsg, currentTemplate.defaults.unlockMsg);
+  const actionHint = resolveText(data?.actionHint, theme.hint);
+  const letterTitle = resolveText(data?.letterTitle, currentTemplate.defaults.letterTitle);
+  const letterBody = resolveText(data?.letterText ?? data?.letterBody, currentTemplate.defaults.letterBody);
+  const signature = resolveText(data?.customSign, theme.signature || 'Con todo mi amor ❤️');
+  const photoCaption = resolveText(data?.photoCaption, '');
+  const photos = resolvePhotos(data);
+
   const handleTap = () => {
     if (unlocked) return;
     const next = step + 1;
@@ -1065,10 +1077,11 @@ export default function DynamicUniversalTemplate({ templateId, data }) {
 
   return (
     <div
-      className="relative min-h-full w-full text-white flex flex-col items-center justify-between gap-4 p-5 sm:p-7 select-none overflow-hidden"
+      className="relative min-h-full w-full text-white flex flex-col items-center justify-between gap-4 p-5 sm:p-7 select-none overflow-hidden isolate"
       style={{ background: theme.bg }}
     >
       <AmbientLayer
+        className="-z-10"
         particles={theme.particles}
         colors={theme.colors}
         aurora={theme.aurora}
@@ -1080,29 +1093,37 @@ export default function DynamicUniversalTemplate({ templateId, data }) {
       <MusicDisc isPlaying={isPlaying} accent={theme.accent} onToggle={() => sound.toggleMusicTrack(data?.customAudio, setIsPlaying)} />
 
       {/* Encabezado */}
-      <header className="relative z-10 text-center max-w-md w-full mt-6">
-        <div
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border text-[11px] font-semibold tracking-wide mb-3 backdrop-blur-sm"
-          style={{ borderColor: `${theme.accent}66`, color: theme.accent }}
-        >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>{currentTemplate.name}</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-serif-romance font-semibold leading-tight dp-gold-text drop-shadow">
-          {data?.title || currentTemplate.defaults.title}
-        </h1>
-        <p className="text-sm text-white/75 mt-2 italic">
-          {unlocked ? data?.unlockMsg || currentTemplate.defaults.unlockMsg : data?.lockTitle || currentTemplate.defaults.lockTitle}
-        </p>
-      </header>
+      {(badgeText || titleText || (unlocked ? unlockSubtitle : lockSubtitle)) && (
+        <header className="relative z-10 text-center max-w-md w-full mt-4 animate-fade-in">
+          {badgeText && (
+            <div
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border text-[11px] font-semibold tracking-wide mb-3 backdrop-blur-sm"
+              style={{ borderColor: `${theme.accent}66`, color: theme.accent }}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{badgeText}</span>
+            </div>
+          )}
+          {titleText && (
+            <h1 className="text-3xl sm:text-4xl font-serif-romance font-semibold leading-tight dp-gold-text drop-shadow">
+              {titleText}
+            </h1>
+          )}
+          {(unlocked ? unlockSubtitle : lockSubtitle) && (
+            <p className="text-sm text-white/75 mt-2 italic">
+              {unlocked ? unlockSubtitle : lockSubtitle}
+            </p>
+          )}
+        </header>
+      )}
 
       {/* Emblema interactivo */}
       {!unlocked || !theme.hideEmblemOnUnlock ? (
-        <div className="relative z-10 flex flex-col items-center">
+        <div className="relative z-10 flex flex-col items-center my-auto">
           <button
             type="button"
             onClick={handleTap}
-            aria-label={theme.hint}
+            aria-label={actionHint || theme.hint}
             className={`relative w-60 h-60 sm:w-64 sm:h-64 rounded-full transition-transform duration-300 ${
               unlocked ? 'scale-90' : 'hover:scale-105 active:scale-95 cursor-pointer'
             }`}
@@ -1131,28 +1152,39 @@ export default function DynamicUniversalTemplate({ templateId, data }) {
                   ))}
                 </div>
               )}
-              <span
-                className="text-xs font-semibold px-4 py-1.5 rounded-full bg-black/40 border backdrop-blur-sm animate-pulse"
-                style={{ borderColor: `${theme.accent}55`, color: '#fff' }}
-              >
-                {theme.hint}
-                {theme.taps > 1 && step > 0 ? ` · ${remaining} más` : ''}
-              </span>
+              {actionHint && (
+                <span
+                  className="text-xs font-semibold px-4 py-1.5 rounded-full bg-black/40 border backdrop-blur-sm animate-pulse"
+                  style={{ borderColor: `${theme.accent}55`, color: '#fff' }}
+                >
+                  {actionHint}
+                  {theme.taps > 1 && step > 0 ? ` · ${remaining} más` : ''}
+                </span>
+              )}
             </div>
           )}
         </div>
       ) : null}
 
-      {/* Carta revelada */}
+      {/* Carta revelada 100% editable y removible */}
       {unlocked ? (
-        <LoveLetterCard
-          title={data?.letterTitle || currentTemplate.defaults.letterTitle}
-          body={data?.letterBody || currentTemplate.defaults.letterBody}
-          photo={data?.photo}
-          accent={theme.accent}
-          variant={theme.paper ? 'paper' : 'dark'}
-          signature={theme.signature}
-        />
+        <div className="w-full max-w-lg z-20 my-auto animate-fade-in">
+          <LoveLetterCard
+            title={letterTitle}
+            body={letterBody}
+            photo={photos[0] || ''}
+            photos={photos}
+            photoCaption={photoCaption}
+            accent={theme.accent}
+            variant={theme.paper ? 'paper' : 'dark'}
+            signature={signature}
+            typewriter={true}
+            onReplay={() => {
+              setStep(0);
+              setUnlocked(false);
+            }}
+          />
+        </div>
       ) : (
         <div className="h-4" />
       )}

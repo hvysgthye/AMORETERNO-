@@ -1,96 +1,207 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { sound } from '../../utils/audioHelper';
-import { Play, Pause, Heart, Disc, Music, Sparkles, Volume2 } from 'lucide-react';
-import { AmbientLayer } from './shared/Decor';
+import { Play, Pause, Heart, Disc, Sparkles, SkipBack, SkipForward, Music, Image } from 'lucide-react';
+import { AmbientLayer, LoveLetterCard, resolveText, resolvePhotos } from './shared/Decor';
 
 export default function SpotifyTemplate({ data }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(true);
+  const [activeTab, setActiveTab] = useState('player'); // 'player' | 'lyrics' | 'moments'
+
+  const badgeText = resolveText(data?.badgeText, 'Spotify Romance Edition');
+  const titleText = resolveText(data?.title, 'La Canción de Nuestra Historia');
+  const subHeader = resolveText(data?.lockStatus ?? data?.lockTitle, 'Presiona Play para escuchar nuestra melodía');
+  const songTitle = resolveText(data?.songTitle ?? data?.customAudioName ?? data?.musicTitle, 'Nuestra Canción Favorita');
+  const songArtist = resolveText(data?.songArtist, 'Tú & Yo • En reproducción continua');
+  const letterTitle = resolveText(data?.letterTitle, 'Eres mi canción favorita en repeat');
+  const letterBody = resolveText(data?.letterText ?? data?.letterBody, 'Hay canciones que me hacen recordar tu sonrisa, tus ojos y la forma en que iluminas todo...');
+  const signature = resolveText(data?.customSign, 'Con todo mi amor ❤️');
+  const photoCaption = resolveText(data?.photoCaption, '');
+  const photos = resolvePhotos(data);
 
   const togglePlay = () => {
     sound.toggleMusicTrack(data?.customAudio, setIsPlaying);
   };
 
   return (
-    <div className="relative min-h-full w-full bg-gradient-to-br from-[#0c1410] via-[#081f14] to-[#040806] text-white flex flex-col items-center justify-between p-4 sm:p-6 select-none overflow-hidden isolate">
-      <AmbientLayer className="-z-10" particles={['note','sparkle']} colors={['#1db954','#86efac','#ffffff']} aurora={['#15803d','#0f766e']} seed={19} />
-      {/* Glow Aura */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="relative min-h-full w-full bg-gradient-to-b from-[#132a1f] via-[#09140f] to-[#050806] text-white flex flex-col items-center justify-between p-4 sm:p-6 select-none overflow-hidden isolate">
+      <AmbientLayer className="-z-10" particles={['note', 'sparkle']} colors={['#1db954', '#86efac', '#ffffff']} aurora={['#15803d', '#0f766e']} seed={19} />
 
-      {/* Top Header */}
-      <div className="z-10 text-center max-w-md w-full mt-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-2">
-          <Disc className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
-          <span>Spotify Romance Edition</span>
+      {/* Top Header & Navigation Pills */}
+      <div className="z-10 text-center max-w-md w-full mt-1">
+        {badgeText && (
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#1db954]/15 border border-[#1db954]/40 text-[#1ed760] text-xs font-bold mb-2">
+            <Disc className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
+            <span>{badgeText}</span>
+          </div>
+        )}
+        {titleText && (
+          <h1 className="text-xl sm:text-2xl font-bold font-serif-romance text-white">
+            {titleText}
+          </h1>
+        )}
+        {subHeader && (
+          <p className="text-xs text-emerald-200/75 mt-1">{subHeader}</p>
+        )}
+
+        {/* Interactive View Switcher */}
+        <div className="mt-3 inline-flex bg-black/50 border border-white/10 rounded-full p-1 gap-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('player')}
+            className={`px-3.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+              activeTab === 'player' ? 'bg-[#1db954] text-black' : 'text-white/75 hover:text-white'
+            }`}
+          >
+            Reproductor
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('lyrics')}
+            className={`px-3.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+              activeTab === 'lyrics' ? 'bg-[#1db954] text-black' : 'text-white/75 hover:text-white'
+            }`}
+          >
+            Dedicatoria
+          </button>
+          {photos.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('moments')}
+              className={`px-3.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                activeTab === 'moments' ? 'bg-[#1db954] text-black' : 'text-white/75 hover:text-white'
+              }`}
+            >
+              Momentos ({photos.length})
+            </button>
+          )}
         </div>
-        <h1 className="text-xl sm:text-2xl font-bold font-serif-romance text-white">
-          {data?.title || 'La Canción de Nuestra Historia'}
-        </h1>
-        <p className="text-xs text-emerald-300/70 mt-1">
-          {isPlaying ? 'Reproduciendo tu tema favorito...' : (data?.lockTitle || 'Presiona Play para escuchar la melodía')}
-        </p>
       </div>
 
-      {/* Spinning Vinyl Record Player with Photo Album Art */}
-      <div className="my-auto relative flex flex-col items-center">
-        {/* Vinyl Disc */}
-        <div
-          onClick={togglePlay}
-          className={`relative w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-gradient-to-tr from-black via-zinc-900 to-black border-4 border-zinc-800 shadow-2xl flex items-center justify-center cursor-pointer transition-transform duration-700 ${
-            isPlaying ? 'animate-spin-slow shadow-emerald-500/30' : 'hover:scale-105'
-          }`}
-          style={{
-            backgroundImage: 'repeating-radial-gradient(circle, #111 0, #111 2px, #181818 3px, #111 4px)'
-          }}
-        >
-          {/* Inner Album Art */}
-          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-zinc-950 shadow-inner relative flex items-center justify-center">
-            {data?.photo ? (
-              <img src={data.photo} alt="Álbum" className="w-full h-full object-cover" />
+      {/* TAB 1: SPOTIFY VINYL & GLASS PLAYER CARD */}
+      {activeTab === 'player' && (
+        <div className="my-auto z-10 w-full max-w-sm bg-gradient-to-b from-white/10 to-black/60 border border-white/15 rounded-3xl p-5 backdrop-blur-xl shadow-2xl flex flex-col items-center">
+          {/* Album Cover / Spinning Vinyl */}
+          <div
+            onClick={togglePlay}
+            className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-2xl overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.75)] border border-white/15 cursor-pointer group flex items-center justify-center bg-zinc-900"
+          >
+            {photos[0] ? (
+              <img
+                src={photos[0]}
+                alt=""
+                className={`w-full h-full object-cover transition-transform duration-700 ${isPlaying ? 'scale-105' : 'group-hover:scale-105'}`}
+              />
             ) : (
-              <div className="w-full h-full bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center">
-                <Heart className="w-8 h-8 text-white fill-white" />
+              <div
+                className={`w-48 h-48 rounded-full border-4 border-zinc-800 flex items-center justify-center ${
+                  isPlaying ? 'animate-spin-slow' : ''
+                }`}
+                style={{
+                  backgroundImage: 'repeating-radial-gradient(circle, #111 0, #111 2px, #1f1f1f 3px, #111 4px)'
+                }}
+              >
+                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#1db954] to-emerald-700 flex items-center justify-center">
+                  <Heart className="w-8 h-8 text-white fill-white" />
+                </div>
               </div>
             )}
-            {/* Center Spindle Hole */}
-            <div className="absolute w-4 h-4 rounded-full bg-black border-2 border-white/40" />
-          </div>
-        </div>
-
-        {/* Player Controls Bar */}
-        <div className="mt-6 w-full max-w-xs bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-4 backdrop-blur-xl shadow-xl flex items-center justify-between">
-          <button
-            onClick={() => setLiked(!liked)}
-            className="p-2 text-slate-400 hover:text-rose-500 transition cursor-pointer"
-          >
-            <Heart className={`w-5 h-5 ${liked ? 'fill-rose-500 text-rose-500' : ''}`} />
-          </button>
-
-          <div className="flex flex-col items-center">
-            <span className="text-xs font-bold text-white truncate max-w-[140px]">
-              {data?.customAudioName || data?.musicTitle || 'Nuestra Melodía'}
-            </span>
-            <span className="text-[10px] text-emerald-400">En reproducción continua</span>
           </div>
 
-          <button
-            onClick={togglePlay}
-            className="p-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/30 active:scale-95 transition cursor-pointer"
-          >
-            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
-          </button>
-        </div>
-      </div>
+          {/* Track Metadata & Like */}
+          <div className="w-full flex items-center justify-between mt-5">
+            <div className="min-w-0 pr-3">
+              {songTitle && <h2 className="text-base sm:text-lg font-bold text-white truncate">{songTitle}</h2>}
+              {songArtist && <p className="text-xs text-emerald-300/80 truncate">{songArtist}</p>}
+            </div>
+            <button
+              type="button"
+              onClick={() => setLiked(!liked)}
+              className="p-2 rounded-full hover:bg-white/10 transition cursor-pointer"
+            >
+              <Heart className={`w-6 h-6 ${liked ? 'fill-[#1db954] text-[#1db954]' : 'text-white/60'}`} />
+            </button>
+          </div>
 
-      {/* Love Letter Card (Revealed below) */}
-      <div className="z-10 w-full max-w-md bg-slate-900/80 border border-emerald-500/30 rounded-3xl p-5 backdrop-blur-xl shadow-2xl mb-2">
-        <h2 className="font-semibold text-sm text-emerald-300 mb-1">
-          {data?.letterTitle || 'Eres mi canción favorita en repeat'}
-        </h2>
-        <p className="text-xs text-emerald-100/90 leading-relaxed font-light whitespace-pre-line">
-          {data?.letterBody || 'Hay canciones que me hacen recordar tu sonrisa, tus ojos y la forma en que iluminas todo...'}
-        </p>
-      </div>
+          {/* Animated Progress Bar */}
+          <div className="w-full mt-4">
+            <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+              <div className={`h-full bg-[#1db954] rounded-full transition-all duration-700 ${isPlaying ? 'w-2/3 animate-pulse' : 'w-1/3'}`} />
+            </div>
+            <div className="flex justify-between text-[10px] text-white/50 font-mono mt-1">
+              <span>{isPlaying ? '1:42' : '0:58'}</span>
+              <span>∞:∞</span>
+            </div>
+          </div>
+
+          {/* Transport Controls */}
+          <div className="w-full flex items-center justify-center gap-6 mt-3">
+            <button type="button" onClick={togglePlay} className="text-white/70 hover:text-white cursor-pointer">
+              <SkipBack className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              onClick={togglePlay}
+              className="w-14 h-14 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black flex items-center justify-center shadow-[0_0_25px_rgba(29,185,84,0.5)] active:scale-95 transition cursor-pointer"
+            >
+              {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current ml-0.5" />}
+            </button>
+            <button type="button" onClick={togglePlay} className="text-white/70 hover:text-white cursor-pointer">
+              <SkipForward className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Lyrics Preview Box (Spotify Lyrics Style) */}
+          {(letterTitle || letterBody) && (
+            <div
+              onClick={() => setActiveTab('lyrics')}
+              className="w-full mt-5 rounded-2xl bg-[#1db954]/20 border border-[#1db954]/30 p-3.5 cursor-pointer hover:bg-[#1db954]/25 transition"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1ed760]">LETRA / DEDICATORIA</span>
+                <span className="text-[10px] text-emerald-200 underline">Expandir</span>
+              </div>
+              {letterTitle && <p className="text-xs font-bold text-white mb-0.5">{letterTitle}</p>}
+              {letterBody && <p className="text-xs text-emerald-100/90 line-clamp-2">{letterBody}</p>}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 2: FULL DEDICATION CARD */}
+      {activeTab === 'lyrics' && (
+        <div className="w-full max-w-lg z-20 my-auto animate-fade-in">
+          <LoveLetterCard
+            variant="Flush"
+            accent="#1db954"
+            badge={songTitle}
+            photo={photos[0] || ''}
+            photos={photos}
+            photoCaption={photoCaption}
+            title={letterTitle}
+            body={letterBody}
+            signature={signature}
+            typewriter={true}
+            onReplay={() => setActiveTab('player')}
+          />
+        </div>
+      )}
+
+      {/* TAB 3: MOMENTS PHOTO GALLERY */}
+      {activeTab === 'moments' && (
+        <div className="w-full max-w-md z-20 my-auto bg-black/65 border border-white/15 rounded-3xl p-4 backdrop-blur-xl">
+          <div className="grid grid-cols-2 gap-3">
+            {photos.map((src, i) => (
+              <div key={i} className="rounded-2xl overflow-hidden border border-white/15 aspect-square bg-zinc-900">
+                <img src={src} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+          {photoCaption && <p className="text-center text-xs text-emerald-200 mt-3 italic">{photoCaption}</p>}
+        </div>
+      )}
+
+      <div />
     </div>
   );
 }

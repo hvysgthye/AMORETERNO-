@@ -8,19 +8,27 @@
 
 export function generateStandaloneHTML(templateId, data) {
   const safeData = {
-    title: data?.title || 'Dedicatoria de Amor',
-    lockTitle: data?.lockTitle || 'Toca para abrir la sorpresa',
-    unlockMsg: data?.unlockMsg || '¡Desbloqueaste mi amor!',
-    letterTitle: data?.letterTitle || 'Para la persona más especial',
-    letterBody: data?.letterBody || 'Desde que llegaste a mi vida, cada instante tiene más luz y sentido. Gracias por compartir este camino conmigo.',
-    photo: data?.photo || null,
+    title: data?.title !== undefined ? data.title : 'Dedicatoria de Amor',
+    lockTitle: (data?.lockStatus ?? data?.lockTitle) !== undefined ? (data.lockStatus ?? data.lockTitle) : 'Toca para abrir la sorpresa',
+    unlockMsg: data?.unlockMsg !== undefined ? data.unlockMsg : '¡Desbloqueaste mi amor!',
+    letterTitle: data?.letterTitle !== undefined ? data.letterTitle : 'Para la persona más especial',
+    letterBody: (data?.letterText ?? data?.letterBody) !== undefined ? (data.letterText ?? data.letterBody) : 'Desde que llegaste a mi vida, cada instante tiene más luz y sentido. Gracias por compartir este camino conmigo.',
+    photo: data?.hidePhoto ? null : (data?.photo || (Array.isArray(data?.photos) && data.photos[0]) || null),
+    photos: data?.hidePhoto ? [] : (Array.isArray(data?.photos) ? data.photos : (data?.photo ? [data.photo] : [])),
+    photoCaption: data?.photoCaption !== undefined ? data.photoCaption : '',
     customAudio: data?.customAudio || null,
     musicTitle: data?.customAudioName || data?.musicTitle || 'Melodía Romántica',
-    combo: data?.combo || [14, 2, 24],
+    combo: [
+      data?.combo1 !== undefined && data.combo1 !== '' ? Number(data.combo1) : (data?.combo?.[0] ?? 14),
+      data?.combo2 !== undefined && data.combo2 !== '' ? Number(data.combo2) : (data?.combo?.[1] ?? 2),
+      data?.combo3 !== undefined && data.combo3 !== '' ? Number(data.combo3) : (data?.combo?.[2] ?? 24)
+    ],
     starName: data?.starName || 'Constelación Nuestro Amor',
+    badgeText: data?.badgeText !== undefined ? data.badgeText : '',
+    actionHint: data?.actionHint !== undefined ? data.actionHint : '',
     voiceNote: data?.voiceNote || null,
     ambientFx: data?.ambientFx || 'hearts',
-    customSign: data?.customSign || '',
+    customSign: data?.customSign !== undefined ? data.customSign : 'Con todo mi amor ❤️',
     presetMelody: data?.presetMelody || 'music-box'
   };
 
@@ -516,13 +524,15 @@ export function generateStandaloneHTML(templateId, data) {
                 <div class="overflow-hidden max-h-56">
                   <img src="\${DEDICATION_DATA.photo}" alt="Nuestro recuerdo" class="w-full h-full object-cover" />
                 </div>
-                <figcaption class="absolute bottom-1 inset-x-0 text-center font-romantic text-lg text-stone-600">Nuestro momento ♡</figcaption>
+                \${DEDICATION_DATA.photoCaption ? \`<figcaption class="absolute bottom-1 inset-x-0 text-center font-romantic text-base text-stone-600">\${DEDICATION_DATA.photoCaption}</figcaption>\` : ''}
               </figure>
             </div>
           \` : ''}
-          <h2 class="text-center text-xl sm:text-2xl font-serif-romance font-semibold leading-snug \${isPaper ? 'text-rose-900' : 'dp-gold-text'}">\${DEDICATION_DATA.letterTitle || ''}</h2>
-          <div class="w-32 h-[1px] mx-auto my-3" style="background: \${isPaper ? '#b9853a' : accent}; opacity: 0.6;"></div>
-          <p class="text-sm sm:text-[15px] leading-relaxed whitespace-pre-line text-center \${isPaper ? 'font-serif text-stone-700' : 'text-slate-200/90 font-light'}">\${DEDICATION_DATA.letterBody || ''}</p>
+          \${DEDICATION_DATA.letterTitle ? \`
+            <h2 class="text-center text-xl sm:text-2xl font-serif-romance font-semibold leading-snug \${isPaper ? 'text-rose-900' : 'dp-gold-text'}">\${DEDICATION_DATA.letterTitle}</h2>
+            <div class="w-32 h-[1px] mx-auto my-3" style="background: \${isPaper ? '#b9853a' : accent}; opacity: 0.6;"></div>
+          \` : ''}
+          \${DEDICATION_DATA.letterBody ? \`<p class="text-sm sm:text-[15px] leading-relaxed whitespace-pre-line text-center \${isPaper ? 'font-serif text-stone-700' : 'text-slate-200/90 font-light'}">\${DEDICATION_DATA.letterBody}</p>\` : ''}
           \${DEDICATION_DATA.voiceNote ? \`
             <div class="mt-4 p-3 rounded-2xl bg-rose-950/50 border border-rose-500/40 flex items-center justify-between">
               <div class="flex items-center gap-3">
@@ -537,9 +547,11 @@ export function generateStandaloneHTML(templateId, data) {
               <audio id="voiceAudioEl" src="\${DEDICATION_DATA.voiceNote}" preload="auto"></audio>
             </div>
           \` : ''}
-          <div class="mt-5 text-center">
-            <span class="font-romantic text-2xl \${isPaper ? 'text-rose-800' : ''}" style="\${!isPaper ? 'color:' + accent : ''}">\${DEDICATION_DATA.customSign || currentTheme.signature || 'Siempre en mi corazón'} ♥</span>
-          </div>
+          \${DEDICATION_DATA.customSign ? \`
+            <div class="mt-5 text-center">
+              <span class="font-romantic text-2xl \${isPaper ? 'text-rose-800' : ''}" style="\${!isPaper ? 'color:' + accent : ''}">\${DEDICATION_DATA.customSign}</span>
+            </div>
+          \` : ''}
         </div>
       \`;
     }
