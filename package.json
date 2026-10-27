@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.mjs",
+    "artwork": "node scripts/build-keepsake-art.mjs",
+    "prebuild": "npm run artwork",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

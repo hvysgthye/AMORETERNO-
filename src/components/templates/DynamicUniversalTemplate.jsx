@@ -1,3 +1,4 @@
+import { getKeepsakeDesign } from '../../data/keepsakeDesigns';
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { sound } from '../../utils/audioHelper';
@@ -1023,7 +1024,8 @@ const DEFAULT_THEME = {
 
 export default function DynamicUniversalTemplate({ templateId, data }) {
   const currentTemplate = TEMPLATES.find((t) => t.id === templateId) || TEMPLATES[0];
-  const theme = THEMES[templateId] || DEFAULT_THEME;
+  const design = getKeepsakeDesign(templateId);
+  const theme = { ...(THEMES[templateId] || DEFAULT_THEME), accent: design.accent };
   const { Emblem } = theme;
   const [step, setStep] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
@@ -1124,7 +1126,7 @@ export default function DynamicUniversalTemplate({ templateId, data }) {
             type="button"
             onClick={handleTap}
             aria-label={actionHint || theme.hint}
-            className={`relative w-60 h-60 sm:w-64 sm:h-64 rounded-full transition-transform duration-300 ${
+            className={`keepsake-emblem relative w-60 h-60 sm:w-64 sm:h-64 rounded-full transition-transform duration-300 ${
               unlocked ? 'scale-90' : 'hover:scale-105 active:scale-95 cursor-pointer'
             }`}
           >

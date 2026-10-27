@@ -2,8 +2,11 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { sound } from '../../utils/audioHelper';
 import { Sparkles, Heart, Mail, X, ZoomIn, ZoomOut, Compass } from 'lucide-react';
 import { MusicDisc, LoveLetterCard, resolveText, resolvePhotos } from './shared/Decor';
+import KeepsakeArtwork from './shared/KeepsakeArtwork';
+import { getKeepsakeDesign } from '../../data/keepsakeDesigns';
 
-export default function GalaxyTemplate({ data }) {
+export default function GalaxyTemplate({ data, templateId = 'galaxy' }) {
+  const design = getKeepsakeDesign(templateId);
   const canvasRef = useRef(null);
   const [started, setStarted] = useState(false);
   const [bgmActive, setBgmActive] = useState(false);
@@ -61,7 +64,7 @@ export default function GalaxyTemplate({ data }) {
         angle,
         y: (Math.random() - 0.5) * 28 * (1 - dist / 300),
         size: Math.random() * 2 + 0.6,
-        color: ['#ffffff', '#f472b6', '#c084fc', '#67e8f9', '#fde047'][i % 5],
+        color: [design.ink, design.accent, '#c4b5fd', '#a5d8e5', '#eee0b5'][i % 5],
         speed: 0.002 + (1 / (dist + 40)) * 0.35
       };
     });
@@ -242,7 +245,7 @@ export default function GalaxyTemplate({ data }) {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [phrases, photos, zoom]);
+  }, [phrases, photos, zoom, templateId]);
 
   const handlePointerDown = (e) => {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -335,18 +338,18 @@ export default function GalaxyTemplate({ data }) {
 
       {/* Initial Tap to Enter Galaxy Overlay */}
       {!started && (
-        <div
+        <button type="button"
           onClick={() => {
             setStarted(true);
             sound.playUnlockSuccess();
             if (!bgmActive) sound.toggleMusicTrack(data?.customAudio, setBgmActive);
           }}
-          className="z-20 my-auto flex flex-col items-center cursor-pointer bg-purple-950/60 border border-pink-400/40 backdrop-blur-xl px-7 py-5 rounded-3xl shadow-[0_0_40px_rgba(236,72,153,0.4)] animate-pulse"
+          className="keepsake-galaxy-enter z-20 my-auto flex flex-col items-center cursor-pointer text-center"
         >
-          <Sparkles className="w-8 h-8 text-pink-400 mb-2" />
-          <span className="text-base font-bold text-pink-100">Toca para explorar nuestra galaxia ✨</span>
-          {unlockMsg && <span className="text-xs text-purple-200/80 mt-1">{unlockMsg}</span>}
-        </div>
+          <KeepsakeArtwork templateId={templateId} />
+          <span className="keepsake-galaxy-cta">Entrar a nuestro universo <span aria-hidden="true">↗</span></span>
+          {unlockMsg && <span className="text-xs mt-4 max-w-64 leading-relaxed" style={{color:design.ink}}>{unlockMsg}</span>}
+        </button>
       )}
 
       {/* Selected Floating Phrase Toast */}

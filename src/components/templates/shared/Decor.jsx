@@ -277,14 +277,17 @@ export function LoveLetterCard({
   }, [photo, photos]);
 
   const [photoIdx, setPhotoIdx] = useState(0);
+  const [failedPhotos, setFailedPhotos] = useState({});
   const safeIdx = gallery.length > 0 ? photoIdx % gallery.length : 0;
 
   // Efecto máquina de escribir opcional
   const cleanBody = body ?? '';
   const [typedLen, setTypedLen] = useState(typewriter ? 0 : cleanBody.length);
+  const [finishedBody, setFinishedBody] = useState(null);
+  const instantBody = !typewriter || finishedBody === cleanBody;
 
   useEffect(() => {
-    if (!typewriter) {
+    if (!typewriter || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
       setTypedLen(cleanBody.length);
       return;
     }
@@ -303,7 +306,7 @@ export function LoveLetterCard({
     return () => clearInterval(timer);
   }, [cleanBody, typewriter]);
 
-  const displayedBody = typewriter ? cleanBody.slice(0, typedLen) : cleanBody;
+  const displayedBody = instantBody ? cleanBody : cleanBody.slice(0, typedLen);
   const cleanTitle = title !== undefined && title !== null ? String(title).trim() : '';
   const cleanSignature = signature !== undefined && signature !== null ? String(signature).trim() : '';
   const cleanCaption = photoCaption !== undefined && photoCaption !== null ? String(photoCaption).trim() : '';
@@ -311,9 +314,10 @@ export function LoveLetterCard({
   return (
     <div
       onClick={() => {
-        if (typewriter && typedLen < cleanBody.length) setTypedLen(cleanBody.length);
+        if (!instantBody) setFinishedBody(cleanBody);
       }}
-      className={`relative z-10 w-full max-w-md rounded-[30px] p-6 sm:p-8 shadow-2xl dp-reveal transition-all ${
+      data-paper={isPaper}
+      className={`love-keepsake relative z-10 w-full max-w-md rounded-[30px] p-6 sm:p-8 shadow-2xl dp-reveal transition-all ${
         isPaper
           ? 'bg-[linear-gradient(165deg,#fffaf5_0%,#fceee9_58%,#f7dfd8_100%)] text-stone-800 border border-rose-300/60'
           : 'bg-slate-950/80 text-white border border-white/15 backdrop-blur-2xl'
@@ -329,6 +333,8 @@ export function LoveLetterCard({
       <CornerOrnament color={isPaper ? '#b9853a' : accent} className="bottom-2.5 right-2.5 rotate-180" />
       <CornerOrnament color={isPaper ? '#b9853a' : accent} className="bottom-2.5 left-2.5 -rotate-90" />
 
+      <div className="keepsake-letter-mark" aria-hidden="true">Un recuerdo solo nuestro</div>
+
       {/* Galería / Polaroid si el usuario dejó al menos 1 foto */}
       {gallery.length > 0 && (
         <div className="flex flex-col items-center mb-5">
@@ -340,11 +346,18 @@ export function LoveLetterCard({
             {/* Cinta washi decorativa */}
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-amber-100/85 rotate-[3deg] shadow-sm border border-amber-200/50" />
             <div className="relative overflow-hidden rounded-sm aspect-[4/3] bg-stone-100 dp-shine">
-              <img
+              {failedPhotos[gallery[safeIdx]] ? (
+                <div className="keepsake-photo-fallback" role="img" aria-label="La foto no está disponible">
+                  <svg viewBox="0 0 160 140" aria-hidden="true"><path d="M80 109C66 93 27 73 27 46c0-29 39-34 53-9 14-25 53-20 53 9 0 27-39 47-53 63Z" fill="none" stroke="currentColor" strokeWidth="1.2"/><path d="M19 118q61-14 122 0M39 130q41-9 82 0" fill="none" stroke="currentColor" strokeWidth=".7"/><circle cx="129" cy="21" r="3" fill="currentColor"/></svg>
+                  <span>Un instante para siempre</span>
+                  <small>La foto no está disponible</small>
+                </div>
+              ) : <img
                 src={gallery[safeIdx]}
+                onError={() => setFailedPhotos(previous => ({ ...previous, [gallery[safeIdx]]: true }))}
                 alt={cleanCaption || 'Recuerdo especial'}
                 className="w-full h-full object-cover transition-all duration-500"
-              />
+              />}
               {gallery.length > 1 && (
                 <>
                   <button
@@ -378,7 +391,9 @@ export function LoveLetterCard({
                           e.stopPropagation();
                           setPhotoIdx(idx);
                         }}
-                        className={`w-1.5 h-1.5 rounded-full transition-all ${
+                        aria-label={`Ver recuerdo ${idx + 1}`}
+                        aria-current={idx === safeIdx}
+                        className={`keepsake-photo-dot w-1.5 h-1.5 rounded-full transition-all ${
                           idx === safeIdx ? 'bg-white w-3.5' : 'bg-white/50'
                         }`}
                       />
@@ -412,12 +427,12 @@ export function LoveLetterCard({
 
       {cleanBody && (
         <div
-          className={`text-sm sm:text-[15.5px] leading-relaxed whitespace-pre-line text-center max-h-[42vh] overflow-y-auto px-1 ${
+          className={`keepsake-letter-body text-sm sm:text-[15.5px] leading-relaxed whitespace-pre-line text-center max-h-[42vh] overflow-y-auto px-1 ${
             isPaper ? 'font-serif text-stone-800' : 'text-slate-100/95 font-light'
           }`}
         >
           {displayedBody}
-          {typewriter && typedLen < cleanBody.length && (
+          {!instantBody && typedLen < cleanBody.length && (
             <span className="inline-block w-1.5 h-4 ml-0.5 align-middle animate-pulse" style={{ background: accent }} />
           )}
         </div>
@@ -426,11 +441,20 @@ export function LoveLetterCard({
       {cleanSignature && (
         <div className="mt-5 pt-3 border-t border-current/10 text-center">
           <span
-            className={`font-romantic text-2xl sm:text-3xl ${isPaper ? 'text-rose-800' : ''}`}
+            className={`keepsake-letter-sign font-romantic text-2xl sm:text-3xl ${isPaper ? 'text-rose-800' : ''}`}
             style={!isPaper ? { color: accent } : undefined}
           >
             {cleanSignature}
           </span>
+        </div>
+      )}
+
+      {!instantBody && typedLen < cleanBody.length && (
+        <div className="mt-3 text-center">
+          <button type="button" onClick={e => { e.stopPropagation(); setFinishedBody(cleanBody); }}
+            className="text-xs underline underline-offset-4 opacity-75 hover:opacity-100">
+            Mostrar carta completa
+          </button>
         </div>
       )}
 

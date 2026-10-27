@@ -1,3 +1,4 @@
+import TemplateStage from './templates/shared/TemplateStage';
 import React, { useState } from 'react';
 import { Smartphone, Tablet, Monitor } from 'lucide-react';
 import CandadoTemplate from './templates/CandadoTemplate';
@@ -27,7 +28,7 @@ export default function LivePreviewFrame({ templateId, data }) {
       case 'universe':
       case 'galaxy-gallery':
       case 'galaxy-gallery-flores-amarillas':
-        return <GalaxyTemplate data={data} />;
+        return <GalaxyTemplate templateId={templateId} data={data} />;
       case 'lector-huellas':
         return <HuellasTemplate data={data} />;
       case 'flores-moradas':
@@ -117,7 +118,7 @@ export default function LivePreviewFrame({ templateId, data }) {
 
           {/* Render Active Template */}
           <div className="flex-1 w-full overflow-y-auto">
-            {renderTemplate()}
+            <TemplateStage key={templateId} templateId={templateId}>{renderTemplate()}</TemplateStage>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import TemplateStage from './templates/shared/TemplateStage';
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Maximize2, Minimize2, Sparkles, PlusCircle, Mic, Play, Pause, Volume2 } from 'lucide-react';
 import CandadoTemplate from './templates/CandadoTemplate';
@@ -71,7 +72,7 @@ export default function RecipientView({ templateId, data, onExitToEditor }) {
       case 'universe':
       case 'galaxy-gallery':
       case 'galaxy-gallery-flores-amarillas':
-        return <GalaxyTemplate data={data} />;
+        return <GalaxyTemplate templateId={templateId} data={data} />;
       case 'lector-huellas':
         return <HuellasTemplate data={data} />;
       case 'flores-moradas':
@@ -147,6 +148,7 @@ export default function RecipientView({ templateId, data, onExitToEditor }) {
         {onExitToEditor && (
           <button
             onClick={onExitToEditor}
+            aria-label="Personalizar esta dedicatoria"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-rose-300 hover:text-white shadow-lg transition"
           >
             <Sparkles className="w-3 h-3 text-rose-400" />
@@ -182,7 +184,7 @@ export default function RecipientView({ templateId, data, onExitToEditor }) {
       {/* Main Fullscreen Interactive Canvas */}
       <main className="flex-1 w-full min-h-screen flex items-center justify-center z-10 relative">
         <div className="w-full min-h-screen max-w-xl mx-auto flex flex-col items-center justify-center py-6 px-3">
-          {renderTemplate()}
+          <TemplateStage key={templateId} templateId={templateId}>{renderTemplate()}</TemplateStage>
         </div>
       </main>
 

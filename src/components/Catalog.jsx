@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
 import { TEMPLATES, CATEGORIES } from '../data/templates';
 import { ArrowUpRight, ArrowRight, Heart, Search, Sparkles, Music2, LockKeyhole, Mail, Flower2, Orbit, Gift, Fingerprint, Car, BookHeart, DoorOpen, TreePine, Gem, Gamepad2, X } from 'lucide-react';
-const THEMES = [
- ['Románticas & Mecánicas', 'rose', Mail, 'Hay palabras que merecen quedarse.'],
- ['Cósmicas & Mágicas', 'cosmos', Orbit, 'En cualquier universo, tú.'],
- ['Flores & Naturaleza', 'garden', Flower2, 'Lo nuestro siempre florece.'],
- ['Biometría & Luces', 'light', Fingerprint, 'Solo tú tienes la llave.'],
- ['Juegos & Dinámicas', 'play', Gamepad2, 'Mi aventura favorita eres tú.'],
- ['Retro & Nostalgia', 'vintage', BookHeart, 'Un recuerdo para toda la vida.'],
- ['Especiales & Regalos', 'gift', Gift, 'Algo bonito está por comenzar.'],
-];
+import KeepsakeArtwork from './templates/shared/KeepsakeArtwork';
+import { getKeepsakeDesign } from '../data/keepsakeDesigns';
 export function TemplateArtwork({ template, featured = false }) {
- const theme = THEMES.find(([category]) => category === template.category) || THEMES[0];
- const icons = { candado: LockKeyhole, carta: Mail, propose: Gem, 'puertas-del-corazon': DoorOpen, hotwheels: Car, 'spotify-amor': Music2, arbol: TreePine, 'lector-huellas': Fingerprint };
- const Icon = icons[template.id] || theme[2];
- return <div className={`template-art art-${theme[1]} ${featured ? 'art-featured' : ''}`} aria-hidden="true">
-  <div className="art-grain" /><div className="art-orbit orbit-one" /><div className="art-orbit orbit-two" />
-  <span className="art-star star-one">✧</span><span className="art-star star-two">✦</span><span className="art-star star-three">✧</span>
-  <span className="art-edition">UNA PEQUEÑA GRAN SORPRESA</span>
-  <div className={`art-object object-${template.id}`}><Icon strokeWidth={1.1} /><span className="art-heart"><Heart size={15} fill="currentColor" /></span></div>
-  <p className="art-quote">{theme[3]}</p><span className="art-signature">Hecho de recuerdos y de ti</span>
+ const d = getKeepsakeDesign(template.id);
+ return <div className={`keepsake-cover ${featured ? 'art-featured' : ''}`} data-family={d.family} aria-hidden="true"
+   style={{'--gift-accent':d.accent,'--gift-ink':d.ink,'--gift-bg':d.background}}>
+   <span className="cover-edition">AMOR ETERNO / {d.edition}</span><span className="cover-star">✧</span>
+   <div className="cover-orbit" />
+   <KeepsakeArtwork templateId={template.id} />
+   <span className="cover-series">Una historia para guardar</span>
+   <p className="art-quote">{d.quote}</p><span className="art-signature">De mi mundo, para el tuyo</span>
  </div>;
 }
+
 export default function Catalog({ onSelectTemplate }) {
  const [category, setCategory] = useState('Todos');
  const [query, setQuery] = useState('');
@@ -45,7 +38,7 @@ export default function Catalog({ onSelectTemplate }) {
   <section className="ae-how" aria-label="Cómo crear tu regalo"><div><span>01</span><h2>Elige su sorpresa</h2><p>Explora la colección y encuentra un diseño que hable de ustedes.</p></div><div><span>02</span><h2>Hazla personal</h2><p>Escribe tu carta, agrega recuerdos y prueba la experiencia en el editor.</p></div><div><span>03</span><h2>Regala el momento</h2><p>Abre Compartir para revisar el enlace o descarga tu regalo como archivo.</p></div></section>
   <section id="coleccion" className="atelier-collection" aria-labelledby="collection-title">
    <div className="collection-heading"><div><span className="atelier-eyebrow">ENCUENTRA SU PRÓXIMO RECUERDO</span><h2 id="collection-title">Pequeños gestos,<br /><em>grandes historias.</em></h2></div><span className="collection-total">{TEMPLATES.length} diseños para sentir</span></div>
-   <div className="collection-toolbar"><label className="atelier-search"><Search size={18} /><span className="sr-only">Buscar plantillas</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="¿Flores, una carta, el universo…?" />{query && <button onClick={() => setQuery('')} aria-label="Limpiar búsqueda"><X size={16} /></button>}</label><span className="toolbar-note">Tú pones la historia. Nosotros, la magia.</span></div>
+   <div className="collection-toolbar"><label className="atelier-search"><Search size={18} /><span className="sr-only">Buscar plantillas</span><input aria-label="Buscar plantillas" value={query} onChange={e => setQuery(e.target.value)} placeholder="¿Flores, una carta, el universo…?" />{query && <button onClick={() => setQuery('')} aria-label="Limpiar búsqueda"><X size={16} /></button>}</label><span className="toolbar-note">Tú pones la historia. Nosotros, la magia.</span></div>
    <div className="atelier-filters" role="group" aria-label="Categorías de plantillas">{CATEGORIES.map(c => <button key={c} aria-pressed={category === c} onClick={() => setCategory(c)}>{c === 'Todos' ? 'Ver todo' : c}</button>)}</div>
    <p className="collection-results" role="status">{filtered.length} {filtered.length === 1 ? 'diseño para tu historia' : 'diseños para tu historia'}</p>
    <div className="atelier-grid">{filtered.map((tpl, index) => <article className="atelier-card" key={tpl.id}>

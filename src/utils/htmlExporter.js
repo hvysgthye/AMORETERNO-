@@ -1,3 +1,7 @@
+import { getKeepsakeDesign } from '../data/keepsakeDesigns.js';
+import { KEEPSAKE_CSS } from './keepsakeStyles.js';
+import { KEEPSAKE_ARTWORK } from '../data/keepsakeArtwork.js';
+
 // Comprehensive Standalone Autonomous HTML Exporter
 // Generates a 100% self-contained single-file .html with:
 // - All 35 Dedicapag NextGen templates faithfully rendered with their rich visual emblems
@@ -20,6 +24,7 @@ function mediaURL(value, kind) {
 }
 
 export function generateStandaloneHTML(templateId, data) {
+  const design = getKeepsakeDesign(templateId);
   const safeData = {
     title: data?.title !== undefined ? data.title : 'Dedicatoria de Amor',
     lockTitle: (data?.lockStatus ?? data?.lockTitle) !== undefined ? (data.lockStatus ?? data.lockTitle) : 'Toca para abrir la sorpresa',
@@ -70,6 +75,10 @@ export function generateStandaloneHTML(templateId, data) {
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
   <style>
+    ${KEEPSAKE_CSS}
+    #standalone-root.keepsake-stage { min-height:100vh; }
+    #standalone-root .keepsake-export-content { position:relative;z-index:1;min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center; }
+    #standalone-root .keepsake-export-content > div { background:transparent; }
     body {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       background: #070914;
@@ -175,13 +184,14 @@ export function generateStandaloneHTML(templateId, data) {
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center select-none bg-[#070914]">
-  <div id="standalone-root" class="w-full min-h-screen flex items-center justify-center relative"></div>
+  <div id="standalone-root" class="keepsake-stage w-full min-h-screen flex items-center justify-center relative" data-family="${design.family}" style="--gift-accent:${design.accent};--gift-ink:${design.ink};--gift-bg:${design.background}"></div>
 
   ${hasCustomAudio ? `<audio id="customAudioPlayer" src="${escapeHTML(safeData.customAudio)}" loop preload="auto"></audio>` : ''}
 
   <script>
     const DEDICATION_DATA = ${serializedData};
     const TEMPLATE_ID = ${serializedTemplateId};
+    const ORIGINAL_ARTWORK = ${JSON.stringify(KEEPSAKE_ARTWORK[design.id]).replace(/</g, '\\u003c')};
     const HAS_CUSTOM_AUDIO = ${hasCustomAudio};
 
     // --- Sound Synthesis Engine ---
@@ -470,7 +480,12 @@ export function generateStandaloneHTML(templateId, data) {
       }
     };
 
-    const currentTheme = THEMES[TEMPLATE_ID] || THEMES['candado'];
+    const currentTheme = {
+      ...(THEMES[TEMPLATE_ID] || { engine: 'universal', taps: 2, particles: ['sparkle', 'heart'], paper: true }),
+      accent: '${design.accent}',
+      colors: ['${design.accent}', '${design.ink}'],
+      bg: 'radial-gradient(ellipse at 50% 35%, ${design.background}, #0b0c15)',
+    };
 
     // --- Ambient Particle Generator ---
     function renderAmbientLayer() {
@@ -536,9 +551,10 @@ export function generateStandaloneHTML(templateId, data) {
       const isPaper = currentTheme.paper;
       const accent = currentTheme.accent || '#f43f5e';
       return \`
-        <div class="relative z-10 w-full max-w-md rounded-[28px] p-6 sm:p-7 shadow-2xl animate-float mt-6 \${
+        <div data-paper="\${isPaper}" class="love-keepsake relative z-10 w-full max-w-md rounded-[28px] p-6 sm:p-7 shadow-2xl mt-6 \${
           isPaper ? 'dp-paper text-stone-800 border border-amber-200' : 'bg-slate-950/80 text-white border border-white/10 backdrop-blur-xl'
         }" style="box-shadow: 0 25px 60px -15px \${accent}55, inset 0 1px 0 rgba(255,255,255,0.08);">
+          <div class="keepsake-letter-mark">Un recuerdo solo nuestro</div>
           \${DEDICATION_DATA.photo ? \`
             <div class="flex justify-center mb-5">
               <figure class="relative bg-white p-2 pb-7 rounded-sm shadow-xl rotate-[-2.5deg] hover:rotate-0 transition-transform duration-500 max-w-[80%]">
@@ -554,7 +570,7 @@ export function generateStandaloneHTML(templateId, data) {
             <h2 class="text-center text-xl sm:text-2xl font-serif-romance font-semibold leading-snug \${isPaper ? 'text-rose-900' : 'dp-gold-text'}">\${DEDICATION_DATA.letterTitle}</h2>
             <div class="w-32 h-[1px] mx-auto my-3" style="background: \${isPaper ? '#b9853a' : accent}; opacity: 0.6;"></div>
           \` : ''}
-          \${DEDICATION_DATA.letterBody ? \`<p class="text-sm sm:text-[15px] leading-relaxed whitespace-pre-line text-center \${isPaper ? 'font-serif text-stone-700' : 'text-slate-200/90 font-light'}">\${DEDICATION_DATA.letterBody}</p>\` : ''}
+          \${DEDICATION_DATA.letterBody ? \`<p class="keepsake-letter-body text-sm sm:text-[15px] leading-relaxed whitespace-pre-line text-center \${isPaper ? 'font-serif text-stone-700' : 'text-slate-200/90 font-light'}">\${DEDICATION_DATA.letterBody}</p>\` : ''}
           \${DEDICATION_DATA.voiceNote ? \`
             <div class="mt-4 p-3 rounded-2xl bg-rose-950/50 border border-rose-500/40 flex items-center justify-between">
               <div class="flex items-center gap-3">
@@ -724,17 +740,17 @@ export function generateStandaloneHTML(templateId, data) {
       } else {
         // Universal and all dynamic emblems
         emblemHtml = \`
-          <div class="relative w-56 h-56 rounded-full flex flex-col items-center justify-center cursor-pointer" onclick="handleTapUniversal()">
+          <button type="button" aria-label="Abrir la sorpresa" class="keepsake-emblem relative w-64 h-64 rounded-full flex flex-col items-center justify-center cursor-pointer" onclick="handleTapUniversal()">
             <div class="absolute inset-2 rounded-full blur-2xl opacity-60" style="background: radial-gradient(circle, \${accent}88, transparent 70%);"></div>
-            <div class="relative w-40 h-40 rounded-full border-2 border-white/20 flex flex-col items-center justify-center bg-black/40 shadow-2xl transform hover:scale-105 active:scale-95 transition">
-              <span class="text-5xl \${unlocked ? 'animate-bounce' : 'dp-heartbeat'}">❤️</span>
-              <span class="text-[11px] font-bold mt-2 uppercase tracking-wider" style="color: \${accent};">\${unlocked ? 'Abierto' : 'Toca Aquí'}</span>
-            </div>
-          </div>
+            <span class="relative block w-full h-full">\${ORIGINAL_ARTWORK}</span>
+          </button>
         \`;
       }
 
       root.innerHTML = \`
+        <div class="keepsake-scenery" aria-hidden="true"></div>
+        <div class="keepsake-frame" aria-hidden="true"></div>
+        <div class="keepsake-export-content">
         \${renderAmbientLayer()}
 
         <!-- Vinyl Music Button -->
@@ -768,6 +784,7 @@ export function generateStandaloneHTML(templateId, data) {
 
           <!-- Revealed Letter Card -->
           \${unlocked ? renderLoveLetterCard() : '<div class="h-6"></div>'}
+        </div>
         </div>
       \`;
 

@@ -77,3 +77,11 @@ Una vez publicado el enlace en producción:
 - Validación local: npm test, 6 pruebas aprobadas; npm run build, compilación correcta.
 - Se conserva compatibilidad con enlaces anteriores. No se añadieron dependencias.
 - La revisión visual en navegador no se completó por restricciones de la herramienta; no se certifica una auditoría visual o móvil completa.
+
+## Colección de 45 ediciones — 2026-10-27
+- Actualización autorizada dentro del trabajo sobre la página publicada: mejora visual de las 45 plantillas.
+- 45 perfiles visuales, portadas SVG originales, escenarios por material, cartas de papel y entradas cósmicas renovadas.
+- Exportación: se conserva el material y se incorpora la ilustración de cada diseño universal, incluidos los diez que antes usaban el candado de respaldo.
+- Verificación: npm run build y npm test correctos (8 pruebas, incluyendo renderizado y revelación de los 45 HTML y contraste de 90 pares).
+- Navegador móvil 390x844: las 45 escenas abrieron con encabezado y sin desbordamiento horizontal. Pruebas de interacción representativas; no se certifican todos los flujos manuales.
+- Evidencia y referencias: replica/design/collection-upgrade.md y replica/clone-screens/keepsake-*.jpg.
