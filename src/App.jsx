@@ -39,7 +39,7 @@ export default function App() {
     if (isRecipientMode && templateData?.title) {
       document.title = `${templateData.title} — Dedicatoria Digital`;
     } else {
-      document.title = 'Dedicapag NextGen — Crea Dedicatorias de Amor Inolvidables';
+      document.title = 'Amor Eterno — Crea Dedicatorias de Amor Inolvidables';
     }
   }, [isRecipientMode, templateData?.title]);
 
@@ -104,7 +104,7 @@ export default function App() {
       />
 
       {/* Main Body */}
-      <main className="flex-1 flex overflow-hidden">
+      <main id="main-content" tabIndex={-1} className={`flex-1 flex min-w-0 ${activeTab === 'editor' ? 'ae-editor-main' : ''}`}>
         {activeTab === 'catalog' ? (
           <div className="w-full overflow-y-auto">
             <Catalog onSelectTemplate={handleSelectTemplate} />
@@ -113,7 +113,7 @@ export default function App() {
           /* Split Screen: Left Side Editor / Right Side Live Preview */
           <div className="w-full flex-1 flex flex-col lg:flex-row overflow-hidden">
             {/* Left Panel: Reactive Editor Form */}
-            <div className="w-full lg:w-[420px] xl:w-[460px] h-[45vh] lg:h-full flex-shrink-0 z-10 shadow-2xl">
+            <div className="w-full lg:w-[420px] xl:w-[460px] ae-editor-panel flex-shrink-0 z-10 shadow-2xl">
               <EditorWizard
                 currentTemplateId={selectedTemplateId}
                 onExportHTML={handleExportHTML}
@@ -125,7 +125,7 @@ export default function App() {
             </div>
 
             {/* Right Panel: Ultra Fluid Real-time Preview 60fps */}
-            <div className="w-full flex-1 h-[55vh] lg:h-full overflow-hidden">
+            <div className="w-full flex-1 ae-preview-panel overflow-hidden">
               <LivePreviewFrame
                 templateId={selectedTemplateId}
                 data={templateData}

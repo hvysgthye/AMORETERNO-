@@ -70,7 +70,7 @@ export default function LivePreviewFrame({ templateId, data }) {
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
           <span className="text-xs font-semibold text-slate-300">
-            Vista Previa Interactiva 60fps
+            Así recibirá tu regalo
           </span>
           <span className="hidden sm:inline text-[10px] text-slate-500">• Puedes probar el candado, tocar los botones y escuchar la música</span>
         </div>
@@ -108,7 +108,7 @@ export default function LivePreviewFrame({ templateId, data }) {
       </div>
 
       {/* Frame Container */}
-      <div className="flex-1 overflow-y-auto flex items-center justify-center p-3 sm:p-6 bg-[#05060f]">
+      <div className="flex-1 overflow-y-auto flex items-start justify-center p-3 sm:p-6 bg-[#05060f]">
         <div className={`relative w-full overflow-hidden transition-all duration-300 bg-black flex flex-col shadow-2xl ${getDeviceWidth()}`}>
           {/* Mobile Speaker / Camera Notch Mock */}
           {deviceMode === 'mobile' && (

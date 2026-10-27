@@ -6,6 +6,19 @@
 // - Responsive mobile, tablet, and desktop layout with 60fps animations
 // - Polaroid photo frame with realistic tape, golden romantic titles, and confetti!
 
+const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+}[char]));
+
+function mediaURL(value, kind) {
+  if (typeof value !== 'string') return null;
+  if (/^https?:\/\//i.test(value)) return value;
+  const dataPattern = kind === 'image'
+    ? /^data:image\/(?:png|jpe?g|gif|webp|avif);base64,[a-z0-9+/=\s]+$/i
+    : /^data:audio\/[a-z0-9.+-]+(?:;codecs=[a-z0-9.+-]+)?;base64,[a-z0-9+/=\s]+$/i;
+  return dataPattern.test(value) ? value : null;
+}
+
 export function generateStandaloneHTML(templateId, data) {
   const safeData = {
     title: data?.title !== undefined ? data.title : 'Dedicatoria de Amor',
@@ -32,8 +45,17 @@ export function generateStandaloneHTML(templateId, data) {
     presetMelody: data?.presetMelody || 'music-box'
   };
 
-  const serializedData = JSON.stringify(safeData).replace(/</g, '\\u003c');
-  const safeTitle = safeData.title.replace(/"/g, '&quot;');
+  safeData.photo = mediaURL(safeData.photo, 'image');
+  safeData.photos = safeData.photos.map(photo => mediaURL(photo, 'image')).filter(Boolean);
+  safeData.customAudio = mediaURL(safeData.customAudio, 'audio');
+  safeData.voiceNote = mediaURL(safeData.voiceNote, 'audio');
+  // Every string is escaped before it can reach an HTML text or attribute context.
+  const displayData = Object.fromEntries(Object.entries(safeData).map(([key, value]) =>
+    [key, typeof value === 'string' ? escapeHTML(value) : value]
+  ));
+  const serializedData = JSON.stringify(displayData).replace(/</g, '\\u003c');
+  const safeTitle = escapeHTML(safeData.title);
+  const serializedTemplateId = JSON.stringify(String(templateId)).replace(/</g, '\\u003c');
   const hasCustomAudio = Boolean(safeData.customAudio);
 
   return `<!DOCTYPE html>
@@ -155,11 +177,11 @@ export function generateStandaloneHTML(templateId, data) {
 <body class="min-h-screen flex items-center justify-center select-none bg-[#070914]">
   <div id="standalone-root" class="w-full min-h-screen flex items-center justify-center relative"></div>
 
-  ${hasCustomAudio ? `<audio id="customAudioPlayer" src="${safeData.customAudio}" loop preload="auto"></audio>` : ''}
+  ${hasCustomAudio ? `<audio id="customAudioPlayer" src="${escapeHTML(safeData.customAudio)}" loop preload="auto"></audio>` : ''}
 
   <script>
     const DEDICATION_DATA = ${serializedData};
-    const TEMPLATE_ID = "${templateId}";
+    const TEMPLATE_ID = ${serializedTemplateId};
     const HAS_CUSTOM_AUDIO = ${hasCustomAudio};
 
     // --- Sound Synthesis Engine ---

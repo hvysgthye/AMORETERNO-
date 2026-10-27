@@ -42,6 +42,7 @@ export default function Catalog({ onSelectTemplate }) {
     <span className="feature-sticker"><Heart size={17} /> Hecho con<br />mucho amor</span>
    </button>
   </section>
+  <section className="ae-how" aria-label="Cómo crear tu regalo"><div><span>01</span><h2>Elige su sorpresa</h2><p>Explora la colección y encuentra un diseño que hable de ustedes.</p></div><div><span>02</span><h2>Hazla personal</h2><p>Escribe tu carta, agrega recuerdos y prueba la experiencia en el editor.</p></div><div><span>03</span><h2>Regala el momento</h2><p>Abre Compartir para revisar el enlace o descarga tu regalo como archivo.</p></div></section>
   <section id="coleccion" className="atelier-collection" aria-labelledby="collection-title">
    <div className="collection-heading"><div><span className="atelier-eyebrow">ENCUENTRA SU PRÓXIMO RECUERDO</span><h2 id="collection-title">Pequeños gestos,<br /><em>grandes historias.</em></h2></div><span className="collection-total">{TEMPLATES.length} diseños para sentir</span></div>
    <div className="collection-toolbar"><label className="atelier-search"><Search size={18} /><span className="sr-only">Buscar plantillas</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="¿Flores, una carta, el universo…?" />{query && <button onClick={() => setQuery('')} aria-label="Limpiar búsqueda"><X size={16} /></button>}</label><span className="toolbar-note">Tú pones la historia. Nosotros, la magia.</span></div>
@@ -50,10 +51,10 @@ export default function Catalog({ onSelectTemplate }) {
    <div className="atelier-grid">{filtered.map((tpl, index) => <article className="atelier-card" key={tpl.id}>
     <button className="art-link" aria-label={`Personalizar ${tpl.name}`} onClick={() => onSelectTemplate(tpl.id)}><TemplateArtwork template={tpl} /><span className="art-badge">{tpl.badge}</span><span className="art-open"><ArrowUpRight size={20} /></span></button>
     <div className="card-category"><span>{tpl.category}</span><span>{String(index + 1).padStart(2, '0')}</span></div><h3><button onClick={() => onSelectTemplate(tpl.id)}>{tpl.name}</button></h3><p className="card-description">{tpl.description}</p>
-    <div className="card-bottom"><span><Music2 size={13} /> Tu música y tus recuerdos</span><button onClick={() => onSelectTemplate(tpl.id)}>Crear sorpresa <ArrowRight size={15} /></button></div>
+    <div className="card-bottom"><span><Music2 size={13} /> Personalízalo a tu manera</span><button onClick={() => onSelectTemplate(tpl.id)}>Crear sorpresa <ArrowRight size={15} /></button></div>
    </article>)}</div>
    {!filtered.length && <div className="atelier-empty"><Search size={32} /><h3>Tu historia necesita otro nombre.</h3><p>Prueba con «flores», «carta» o explora la colección completa.</p><button className="atelier-primary" onClick={() => { setQuery(''); setCategory('Todos'); }}>Ver todos los diseños <ArrowRight size={16} /></button></div>}
   </section>
-  <div className="atelier-end"><Heart size={20} /><p>Las cosas más bonitas empiezan con un pequeño detalle.</p><span>EL TUYO ESTÁ AQUÍ.</span></div>
+  <div className="ae-note"><strong>Antes de enviarlo</strong><p>Prueba tu sorpresa como destinatario. Tus guardados permanecen en este navegador; conserva también una copia descargada de tu regalo.</p></div><div className="atelier-end"><Heart size={20} /><p>Las cosas más bonitas empiezan con un pequeño detalle.</p><span>EL TUYO ESTÁ AQUÍ.</span></div>
  </div>;
 }

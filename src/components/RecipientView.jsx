@@ -193,7 +193,7 @@ export default function RecipientView({ templateId, data, onExitToEditor }) {
           {data?.customSign ? (
             <span>{data.customSign}</span>
           ) : (
-            <span>Hecho con amor en <strong>Dedicapag NextGen</strong></span>
+            <span>Hecho con amor en <strong>Amor Eterno</strong></span>
           )}
         </div>
 

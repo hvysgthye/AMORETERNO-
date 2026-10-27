@@ -8,23 +8,24 @@ const STORAGE_KEY = 'dedicapag_saved_creations';
  */
 export function encodeDedicationToURL(templateId, data) {
   try {
-    const compactPayload = {
-      t: templateId,
-      ti: data.title || '',
-      lt: data.lockTitle || '',
-      um: data.unlockMsg || '',
-      le: data.letterTitle || '',
-      lb: data.letterBody || '',
-      c: data.combo || [14, 2, 24],
-      st: data.starName || '',
-      m: data.musicTitle || ''
-    };
+    // Version 2 stores editable fields once. Legacy aliases are only needed
+    // when decoding older links; duplicating them makes long letters exceed QR capacity.
+    const compactPayload = { t: templateId };
 
     // If photo is an external URL, include it in URL. If it's a small data URL (<2KB), also include.
     if (data.photo && (data.photo.startsWith('http') || data.photo.length < 2048)) {
       compactPayload.ph = data.photo;
     }
 
+    // Keep every editable text/visibility field, including intentionally empty values.
+    compactPayload.v = 2;
+    compactPayload.fields = Object.fromEntries(Object.entries(data || {}).filter(([key, value]) =>
+      !['photo', 'photos', 'customAudio', 'voiceNote'].includes(key) &&
+      (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number' ||
+       (Array.isArray(value) && value.every(item => typeof item === 'number')))
+    ));
+    compactPayload.photos = (data.photos || []).filter(photo => typeof photo === 'string' && /^https?:\/\//.test(photo));
+    if (typeof data.customAudio === 'string' && /^https?:\/\//.test(data.customAudio)) compactPayload.audio = data.customAudio;
     const json = JSON.stringify(compactPayload);
     const base64 = btoa(unescape(encodeURIComponent(json)))
       .replace(/\+/g, '-')
@@ -68,7 +69,9 @@ export function decodeDedicationFromURL() {
           combo: p.c || [14, 2, 24],
           starName: p.st || '',
           musicTitle: p.m || '',
-          photo: p.ph || null
+          photo: p.ph || null,
+          ...(p.v === 2 && p.fields && typeof p.fields === 'object' && !Array.isArray(p.fields) ? p.fields : {}),
+          ...(p.v === 2 ? { photos: Array.isArray(p.photos) ? p.photos : [], customAudio: p.audio || null } : {})
         }
       };
     }
@@ -114,14 +117,17 @@ export function saveCreationLocally(templateId, data) {
   try {
     const list = getSavedCreations();
     const newEntry = {
-      id: 'd_' + Date.now().toString(36),
+      id: 'd_' + crypto.randomUUID(),
       templateId,
       title: data.title || 'Dedicatoria sin título',
       date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
       data
     };
-    // Keep max 20 creations
-    const updated = [newEntry, ...list.filter(item => item.title !== newEntry.title)].slice(0, 20);
+    // Reopening Share for the same content must not create duplicates, but a
+    // shared title never identifies a creation. Preserve different versions.
+    const duplicate = list.find(item => item.templateId === templateId && JSON.stringify(item.data) === JSON.stringify(data));
+    if (duplicate) return duplicate;
+    const updated = [newEntry, ...list].slice(0, 20);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     return newEntry;
   } catch (e) {
@@ -136,7 +142,8 @@ export function saveCreationLocally(templateId, data) {
 export function getSavedCreations() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter(item => item && typeof item.id === 'string' && item.data && typeof item.data === 'object') : [];
   } catch (e) {
     return [];
   }

@@ -60,3 +60,20 @@ Una vez publicado el enlace en producción:
 1. **Prueba en smartphone:** Abre el enlace desde un teléfono móvil con Wi-Fi y datos celulares para verificar la fluidez del candado 3D y el audio.
 2. **Prueba de WhatsApp:** Envía una dedicatoria a un chat de WhatsApp para comprobar la tarjeta enriquecida con imagen, título y emojis.
 3. **Prueba de Tarjeta QR:** Imprime una tarjeta descargada y escanéala con la cámara nativa del celular para verificar que abre en pantalla completa instantáneamente.
+
+## Publicación 2026-10-27
+- Autorización: usuario solicitó PUBLICALOS.
+- Pruebas: node tests/share-regression.mjs aprobado (incluye manejo esperado de URL inválida).
+- Compilación: npm run build aprobado; sin advertencia de bundle mayor de 500 kB.
+- Publicación: push normal de 22a584f a dc2222d en gh-pages, aprobado por GitHub.
+- URL: https://hvysgthye.github.io/AMORETERNO-/
+- Revisión visual completa de 45 diseños y pruebas móviles: pendientes; esta publicación no certifica 100/100.
+- Primera consulta pública todavía mostró versión anterior; esperando propagación de Pages.
+- Verificación final: página pública actualizada, título Amor Eterno y navegación Diseños/Personalizar confirmados en navegador. Captura: clone-screens/published-amor-eterno.png.
+
+## Actualización de prioridades 2026-10-27
+- Autorización: el usuario solicitó guardar en GitHub y actualizar la página existente.
+- Alcance: escape del HTML exportado y validación de multimedia; enlaces sin campos duplicados; QR con margen libre y alternativa para capacidad excedida; historial con identificadores únicos y aviso de fallo de guardado.
+- Validación local: npm test, 6 pruebas aprobadas; npm run build, compilación correcta.
+- Se conserva compatibilidad con enlaces anteriores. No se añadieron dependencias.
+- La revisión visual en navegador no se completó por restricciones de la herramienta; no se certifica una auditoría visual o móvil completa.

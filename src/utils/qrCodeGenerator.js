@@ -1,38 +1,37 @@
 import QRCode from 'qrcode';
 
 /**
- * Generates an SVG string representation of a QR Code with styling and center heart badge.
+ * Generates an unobstructed QR with a four-module quiet zone.
  */
 export function generateQRCodeSVG(text, size = 260, color = '#f43f5e', bg = '#ffffff') {
   try {
-    const qr = QRCode.create(text, { errorCorrectionLevel: 'M' });
+    let qr;
+    try {
+      qr = QRCode.create(text, { errorCorrectionLevel: 'M' });
+    } catch {
+      // Dense letters can still fit at level L. Never truncate the gift.
+      qr = QRCode.create(text, { errorCorrectionLevel: 'L' });
+    }
     const count = qr.modules.size;
-    const cellSize = size / count;
+    const margin = 4;
+    const cellSize = size / (count + margin * 2);
 
     let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges">`;
-    svg += `<rect width="${size}" height="${size}" fill="${bg}" rx="16"/>`;
+    svg += `<rect width="${size}" height="${size}" fill="${bg}"/>`;
 
     for (let r = 0; r < count; r++) {
       for (let c = 0; c < count; c++) {
         if (qr.modules.get(r, c)) {
-          const x = c * cellSize;
-          const y = r * cellSize;
-          svg += `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${cellSize.toFixed(2)}" height="${cellSize.toFixed(2)}" fill="${color}" rx="${(cellSize * 0.25).toFixed(2)}" />`;
+          const x = (c + margin) * cellSize;
+          const y = (r + margin) * cellSize;
+          svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${color}" />`;
         }
       }
     }
 
-    // Heart Emblem in the center
-    const center = size / 2;
-    const heartBadgeRadius = size * 0.12;
-    svg += `<circle cx="${center}" cy="${center}" r="${heartBadgeRadius}" fill="${bg}" stroke="${color}" stroke-width="2"/>`;
-    const heartScale = (heartBadgeRadius * 1.2) / 24;
-    svg += `<g transform="translate(${center} ${center}) scale(${heartScale}) translate(-12 -12)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="${color}"/></g>`;
-
     svg += '</svg>';
     return svg;
   } catch (e) {
-    console.error('QR Generator Error:', e);
     return null;
   }
 }
@@ -119,7 +118,7 @@ export function downloadQRCodeCard({ url, title, partnerName = 'Para Ti' }) {
     // Footer
     ctx.fillStyle = '#fda4af';
     ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('Creado con Dedicapag NextGen • Sin límites ni vencimientos', width / 2, 970);
+    ctx.fillText('Creado con Amor Eterno • Sin límites ni vencimientos', width / 2, 970);
 
     // Trigger download
     const link = document.createElement('a');

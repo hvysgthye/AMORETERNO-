@@ -19,3 +19,8 @@ Historial de creaciones guardadas en el navegador,history,should,no,yes,Guarda h
 Firma y personalizacion libre de marcas forzadas,branding,must,no,yes,Sin paywall para quitar marcas de agua
 Cobro forzoso a las 12 horas,monetization,could,yes,skip,Modelo abusivo rechazado intencionalmente para democratizar el acceso
 Anuncios publicitarios invasivos y rastreadores Monetag,privacy,could,yes,skip,0 anuncios y 0 rastreadores en la version NextGen
+
+Navegacion movil sin fila desbordada,navigation,must,unknown,partial,Implementada con menu desplegable; pendiente QA visual 390px y 1440px
+Identidad Amor Eterno,brand,must,no,yes,Cabecera titulo destinatario y tarjeta QR actualizados
+Conservar personalizacion textual en enlace,sharing,must,unknown,yes,Regresion v2 verifica Unicode campos vacios firma y visibilidad
+Carta con lacre accesible,interaction,should,unknown,partial,Papel y sello renovados; boton de apertura por teclado; pendiente QA visual

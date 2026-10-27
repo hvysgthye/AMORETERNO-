@@ -67,3 +67,5 @@ Documento de auditoría y certificación de construcción pantalla por pantalla 
 * **Funciones esenciales (Must-haves):** 7 de 7 completadas (Puntuación de paridad: 100/100).
 * **Mejoras añadidas sobre la original:** 11 funcionalidades exclusivas operativas.
 * **Siguiente paso del flujo:** `/replica-backend` para auditar la lógica de persistencia y pasarelas.
+
+2026-10-27 — Amor Eterno: cabecera con navegación móvil y menú de acciones; marca y metadatos; guía de creación y conservación; editor con paneles móviles utilizables; carta de papel y lacre con apertura accesible; enlaces v2 conservan textos, campos vacíos, firma y visibilidad. Compilación y regresión de enlaces/exportación aprobadas. Revisión visual local pendiente: navegador integrado no alcanza localhost. No publicado. No se certifican las 45 plantillas.

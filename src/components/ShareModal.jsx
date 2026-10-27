@@ -7,11 +7,12 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('link'); // 'link' | 'qr' | 'preview'
   const [partnerName, setPartnerName] = useState('Para Mi Amor');
+  const [saveError, setSaveError] = useState(false);
 
   // Auto-save creation to local history
   useEffect(() => {
     if (isOpen) {
-      saveCreationLocally(templateId, data);
+      setSaveError(!saveCreationLocally(templateId, data));
     }
   }, [isOpen, templateId, data]);
 
@@ -114,6 +115,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
 
         {/* Modal Body */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-5">
+          {saveError && <p role="alert" className="text-sm text-amber-200">No se pudo guardar en este navegador. Descarga tu regalo para conservar una copia; el almacenamiento puede estar lleno o bloqueado.</p>}
           {/* TAB 1: ENLACE & WHATSAPP */}
           {activeTab === 'link' && (
             <div className="space-y-4">
@@ -177,7 +179,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
               </div>
 
               <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/20 text-[11px] text-slate-300 leading-relaxed">
-                💡 <strong className="text-rose-200">Enlace 100% Permanente:</strong> No caduca ni se borra. Si subiste música personalizada en archivo MP3 de tu celular, recuerda que también puedes usar el botón <em>"Descargar .HTML Autónomo"</em> para enviarle el archivo completo con tu canción adentro.
+                💡 <strong className="text-rose-200">Elige cómo regalarlo:</strong> El enlace conserva los textos y los archivos alojados con una dirección web. Las fotos y canciones subidas desde tu dispositivo se incluyen en <em>Descargar regalo</em>, no en el enlace. Conserva ese archivo para enviar el recuerdo completo.
               </div>
             </div>
           )}
@@ -212,8 +214,8 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
                     className="w-52 h-52 sm:w-60 sm:h-60"
                   />
                 ) : (
-                  <div className="w-52 h-52 flex items-center justify-center text-slate-900 text-xs">
-                    Generando QR...
+                  <div role="status" className="w-52 h-52 flex items-center justify-center text-slate-900 text-xs p-4">
+                    Esta dedicatoria supera la capacidad del QR. Acorta el texto o comparte el enlace completo desde la pestaña Enlace &amp; WhatsApp. También puedes descargar el regalo.
                   </div>
                 )}
               </div>
@@ -221,7 +223,8 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
               {/* Download Card Button */}
               <button
                 onClick={handleDownloadQR}
-                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-xl shadow-rose-600/30 transition cursor-pointer"
+                disabled={!qrSvg}
+                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-xl shadow-rose-600/30 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Download className="w-4 h-4" />
                 <span>Descargar Tarjeta de Regalo con QR (.PNG)</span>

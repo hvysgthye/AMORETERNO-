@@ -71,10 +71,10 @@ export default function CartaTemplate({ data }) {
 
       {/* 3D Folding Envelope Scene */}
       {stage !== 'opened' ? (
-        <div className="my-auto relative flex flex-col items-center z-10 cursor-pointer" onClick={handleOpenEnvelope}>
-          <div className="relative w-80 sm:w-96 h-56 perspective-1000">
+        <button className="ae-envelope-button my-auto relative flex flex-col items-center z-10 cursor-pointer" type="button" aria-label="Romper el sello y abrir la carta" onClick={handleOpenEnvelope}>
+          <div className="ae-envelope relative h-56 perspective-1000">
             {/* Back of Envelope */}
-            <div className="absolute inset-0 rounded-2xl bg-[#f4acb7] shadow-[0_25px_60px_rgba(0,0,0,0.65)] border border-rose-200/50" />
+            <div className="absolute inset-0 rounded-2xl ae-envelope-back shadow-[0_25px_60px_rgba(0,0,0,0.65)] border border-rose-200/50" />
 
             {/* Rising Letter Sheet Inside Pocket */}
             <div
@@ -93,9 +93,9 @@ export default function CartaTemplate({ data }) {
 
             {/* Front Left/Right/Bottom Pocket Fold */}
             <svg viewBox="0 0 360 220" className="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-2xl overflow-hidden">
-              <polygon points="0,0 180,115 0,220" fill="#ffcad4" />
-              <polygon points="360,0 180,115 360,220" fill="#f7b2bd" />
-              <polygon points="0,220 180,105 360,220" fill="#f497a9" />
+              <polygon points="0,0 180,115 0,220" fill="var(--ae-paper-light)" />
+              <polygon points="360,0 180,115 360,220" fill="var(--ae-paper-mid)" />
+              <polygon points="0,220 180,105 360,220" fill="var(--ae-paper-shadow)" />
             </svg>
 
             {/* Top 3D Folding Triangular Flap */}
@@ -108,12 +108,12 @@ export default function CartaTemplate({ data }) {
               }}
               className={`absolute top-0 inset-x-0 w-full h-32 pointer-events-none ${stage === 'opening' ? 'z-10' : 'z-30'}`}
             >
-              <polygon points="0,0 180,125 360,0" fill="#e88d9e" stroke="#f9bec7" strokeWidth="1.5" />
+              <polygon points="0,0 180,125 360,0" fill="var(--ae-paper-mid)" stroke="var(--ae-paper-light)" strokeWidth="1.5" />
             </svg>
 
             {/* Beating Red Wax Heart Seal */}
             {stage === 'closed' && (
-              <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 w-16 h-16 rounded-full bg-gradient-to-tr from-rose-900 via-red-600 to-rose-500 border-2 border-amber-200/80 shadow-[0_6px_20px_rgba(190,18,60,0.7)] flex items-center justify-center hover:scale-110 transition-transform">
+              <div className="ae-wax absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 w-16 h-16 rounded-full bg-gradient-to-tr from-rose-900 via-red-600 to-rose-500 border-2 border-amber-200/80 shadow-[0_6px_20px_rgba(190,18,60,0.7)] flex items-center justify-center hover:scale-110 transition-transform">
                 <Heart className="w-8 h-8 fill-rose-100 text-white animate-pulse" />
               </div>
             )}
@@ -124,7 +124,7 @@ export default function CartaTemplate({ data }) {
               {actionHint}
             </span>
           )}
-        </div>
+        </button>
       ) : (
         <div className="w-full max-w-lg z-20 my-auto animate-fade-in">
           <LoveLetterCard
