@@ -116,6 +116,7 @@ export default function App() {
             <div className="w-full lg:w-[420px] xl:w-[460px] h-[45vh] lg:h-full flex-shrink-0 z-10 shadow-2xl">
               <EditorWizard
                 currentTemplateId={selectedTemplateId}
+                onExportHTML={handleExportHTML}
                 data={templateData}
                 onChange={setTemplateData}
                 onReset={handleResetDefaults}
