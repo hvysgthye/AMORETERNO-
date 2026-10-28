@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "deploy": "vite build && node deploy_ghpages.cjs",
     "record:template": "node scripts/record-template.mjs",
+    "generate:video": "node scripts/record-video.mjs",
     "publish:social": "node scripts/publish-social.mjs"
   },
   "dependencies": {
@@ -22,11 +23,13 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "jsqr": "^1.4.0",
     "postcss": "^8.4.49",
     "puppeteer-core": "^25.16.0",
+    "puppeteer-screen-recorder": "^3.0.6",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.7"
   }
