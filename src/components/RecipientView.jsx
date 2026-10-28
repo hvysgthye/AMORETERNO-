@@ -1,6 +1,6 @@
 import TemplateStage from './templates/shared/TemplateStage';
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, Maximize2, Minimize2, Sparkles, PlusCircle, Mic, Play, Pause, Volume2 } from 'lucide-react';
+import { Heart, Maximize2, Minimize2, Sparkles, Mic, Pause } from 'lucide-react';
 import CandadoTemplate from './templates/CandadoTemplate';
 import GalaxyTemplate from './templates/GalaxyTemplate';
 import HuellasTemplate from './templates/HuellasTemplate';
@@ -199,13 +199,6 @@ export default function RecipientView({ templateId, data, onExitToEditor }) {
           )}
         </div>
 
-        <button
-          onClick={onExitToEditor}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-600/30 hover:bg-rose-600 border border-rose-500/40 text-xs font-semibold text-rose-200 hover:text-white transition cursor-pointer"
-        >
-          <PlusCircle className="w-3.5 h-3.5" />
-          <span>¿Quieres crear una dedicatoria gratis? Haz clic aquí</span>
-        </button>
       </footer>
     </div>
   );

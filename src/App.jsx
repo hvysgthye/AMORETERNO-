@@ -114,7 +114,7 @@ export default function App() {
       <RecipientView
         templateId={selectedTemplateId}
         data={templateData}
-        onExitToEditor={() => {
+        onExitToEditor={INITIAL_PARSED.isRecipientMode || INITIAL_PARSED.giftId ? undefined : () => {
           setIsRecipientMode(false);
           setActiveTab('editor');
         }}
