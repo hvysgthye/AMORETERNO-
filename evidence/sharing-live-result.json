@@ -5,5 +5,13 @@
   "photoBytes": 172,
   "audioBytes": 16044,
   "rangeStatus": 206,
-  "checkedAt": "2026-10-28T01:06:36.716Z"
+  "checkedAt": "2026-10-28T01:06:36.716Z",
+  "browserVerified": {
+    "template": "arbol",
+    "photoLoadedFromHostedStorage": true,
+    "musicPlaybackConfirmed": true,
+    "letterOpened": true,
+    "bundle": "index-BE-g_IvX.js",
+    "screenshot": "evidence/sharing-public-mobile.jpg"
+  }
 }
