@@ -1,35 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Copy, Check, MessageCircle, Send, QrCode, Download, ExternalLink, Sparkles, Heart, Smartphone } from 'lucide-react';
-import { encodeDedicationToURL, getWhatsAppShareURL, getTelegramShareURL, saveCreationLocally } from '../utils/shareHelper';
+import { getWhatsAppShareURL, getTelegramShareURL, saveCreationLocally } from '../utils/shareHelper';
 import { generateQRCodeSVG, downloadQRCodeCard } from '../utils/qrCodeGenerator';
+import { publishGift } from '../utils/cloudGifts';
 
 export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRecipientMode }) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('link'); // 'link' | 'qr' | 'preview'
   const [partnerName, setPartnerName] = useState('Para Mi Amor');
   const [saveError, setSaveError] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const [status, setStatus] = useState('');
+  const [error, setError] = useState('');
+  const [attempt, setAttempt] = useState(0);
+  const published = useRef(null);
 
-  // Auto-save creation to local history
+  // A link exists only after all media and the selected template are persisted.
   useEffect(() => {
-    if (isOpen) {
-      setSaveError(!saveCreationLocally(templateId, data));
+    if (!isOpen) return;
+    setCopied(false); setError(''); setShareUrl(''); setStatus('Preparando el guardado…');
+    if (published.current?.source === data && published.current?.templateId === templateId) {
+      setShareUrl(published.current.url); setStatus('Regalo guardado en línea'); return;
     }
-  }, [isOpen, templateId, data]);
+    const controller = new AbortController(); let cancelled = false;
+    publishGift(templateId, data, { signal: controller.signal, onProgress: label => { if(!cancelled) setStatus(label); } })
+      .then(result => {
+        if(cancelled) return;
+        published.current = { source: data, templateId, url: result.url };
+        setSaveError(!saveCreationLocally(templateId, result.data, {shareId: result.id}));
+        setShareUrl(result.url); setStatus('Regalo guardado en línea');
+      }).catch(error => { if(!cancelled && error.name !== 'AbortError') { setStatus(''); setError(error.message); } });
+    return () => { cancelled = true; controller.abort(); };
+  }, [isOpen, templateId, data, attempt]);
 
   if (!isOpen) return null;
 
-  const shareUrl = encodeDedicationToURL(templateId, data);
   const safeTitle = data?.title || 'Una Sorpresa Inolvidable';
-  const qrSvg = generateQRCodeSVG(shareUrl, 260, '#f43f5e', '#ffffff');
+  const qrSvg = shareUrl ? generateQRCodeSVG(shareUrl, 260, '#111827', '#ffffff') : null;
 
   const handleCopy = () => {
+    if(!shareUrl) return;
     navigator.clipboard.writeText(shareUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    });
+    }).catch(() => setError('No se pudo copiar. Selecciona el enlace y cópialo manualmente.'));
   };
 
   const handleDownloadQR = () => {
+    if(!shareUrl || !qrSvg) return;
     downloadQRCodeCard({
       url: shareUrl,
       title: safeTitle,
@@ -38,11 +56,13 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
   };
 
   const handleOpenWhatsApp = () => {
+    if(!shareUrl) return;
     const waUrl = getWhatsAppShareURL(shareUrl, safeTitle);
     window.open(waUrl, '_blank');
   };
 
   const handleOpenTelegram = () => {
+    if(!shareUrl) return;
     const tgUrl = getTelegramShareURL(shareUrl, safeTitle);
     window.open(tgUrl, '_blank');
   };
@@ -115,6 +135,8 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
 
         {/* Modal Body */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-5">
+          {status && <p role="status" className="text-sm text-emerald-200">{status}</p>}
+          {error && <div role="alert" className="rounded-xl border border-amber-500/30 bg-amber-950/25 p-4 text-sm text-amber-100"><p>{error}</p>{!shareUrl && <button type="button" onClick={() => setAttempt(value => value + 1)} className="mt-3 underline">Volver a intentar el guardado</button>}</div>}
           {saveError && <p role="alert" className="text-sm text-amber-200">No se pudo guardar en este navegador. Descarga tu regalo para conservar una copia; el almacenamiento puede estar lleno o bloqueado.</p>}
           {/* TAB 1: ENLACE & WHATSAPP */}
           {activeTab === 'link' && (
@@ -128,11 +150,14 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
                   <input
                     type="text"
                     readOnly
+                    aria-label="Enlace del regalo guardado"
+                    placeholder={error ? 'El regalo aún no se ha guardado' : 'Guardando fotos, canción y dedicatoria…'}
                     value={shareUrl}
                     className="flex-1 bg-slate-950/80 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-rose-200 font-mono select-all focus:outline-none focus:border-rose-500"
                   />
                   <button
                     onClick={handleCopy}
+                    disabled={!shareUrl}
                     className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer flex-shrink-0 ${
                       copied
                         ? 'bg-emerald-600 text-white'
@@ -149,6 +174,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={handleOpenWhatsApp}
+                  disabled={!shareUrl}
                   className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-emerald-600/25 transition cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4" />
@@ -157,6 +183,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
 
                 <button
                   onClick={handleOpenTelegram}
+                  disabled={!shareUrl}
                   className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-sky-600/25 transition cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
@@ -179,7 +206,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
               </div>
 
               <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/20 text-[11px] text-slate-300 leading-relaxed">
-                💡 <strong className="text-rose-200">Elige cómo regalarlo:</strong> El enlace conserva los textos y los archivos alojados con una dirección web. Las fotos y canciones subidas desde tu dispositivo se incluyen en <em>Descargar regalo</em>, no en el enlace. Conserva ese archivo para enviar el recuerdo completo.
+                <strong className="text-rose-200">Un regalo completo:</strong> Al terminar el guardado, el enlace y el QR abren la plantilla elegida con sus fotos y canción desde otro dispositivo. Cualquier persona que tenga el enlace podrá ver ese regalo; no hay un catálogo público de dedicatorias.
               </div>
             </div>
           )}
@@ -215,7 +242,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
                   />
                 ) : (
                   <div role="status" className="w-52 h-52 flex items-center justify-center text-slate-900 text-xs p-4">
-                    Esta dedicatoria supera la capacidad del QR. Acorta el texto o comparte el enlace completo desde la pestaña Enlace &amp; WhatsApp. También puedes descargar el regalo.
+                    {shareUrl ? 'No se pudo generar el QR. Copia el enlace de tu regalo.' : 'El QR estará listo cuando se confirme el guardado de tu regalo.'}
                   </div>
                 )}
               </div>
@@ -240,7 +267,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
           {activeTab === 'preview' && (
             <div className="space-y-4">
               <p className="text-xs text-slate-300">
-                Así es exactamente como se verá la tarjeta interactiva cuando pegues el enlace en una conversación de WhatsApp:
+                Esta es una simulación del mensaje. WhatsApp puede mostrar una vista previa distinta; el enlace abre el regalo completo guardado.
               </p>
 
               {/* WhatsApp Message Bubble Mockup */}
@@ -279,6 +306,7 @@ export default function ShareModal({ isOpen, onClose, templateId, data, onOpenRe
               <div className="text-center pt-2">
                 <button
                   onClick={handleOpenWhatsApp}
+                  disabled={!shareUrl}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition"
                 >
                   <MessageCircle className="w-4 h-4" />

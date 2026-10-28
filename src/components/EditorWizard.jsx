@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { TEMPLATES } from '../data/templates';
 import { ROMANTIC_PRESETS, romanticAudio } from '../utils/romanticMelodies';
+import { validateAudioFile } from '../utils/mediaOptimizer';
 const MUSIC_TRACKS = ROMANTIC_PRESETS.map(track => ({ ...track, duration: 'Melodía continua' }));
 const LOVE_PHRASES_AI = [
   'Mi lugar favorito siempre será ese momento en el que estamos juntos.',
@@ -68,6 +69,8 @@ export default function EditorWizard({
   const [step, setStep] = useState(1);
   useEffect(() => () => romanticAudio.stop(), []);
   const [playingPreviewTrack, setPlayingPreviewTrack] = useState(null);
+  const [mediaError, setMediaError] = useState('');
+  const [readingAudio, setReadingAudio] = useState(false);
 
   const handleFieldChange = (field, value) => {
     onChange({
@@ -117,6 +120,10 @@ export default function EditorWizard({
   const handleCustomAudioUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const validation = validateAudioFile(file, 25);
+    e.target.value = '';
+    if(!validation.valid) {setMediaError(validation.error);return;}
+    setMediaError(''); setReadingAudio(true); romanticAudio.stop(); setPlayingPreviewTrack(null);
     const reader = new FileReader();
     reader.onload = (ev) => {
       handleBulkChange({
@@ -125,7 +132,9 @@ export default function EditorWizard({
         customAudioName: file.name,
         enableMusic: true
       });
+      setReadingAudio(false);
     };
+    reader.onerror = () => {setReadingAudio(false);setMediaError('No se pudo leer la canción. Vuelve a seleccionar el archivo.');};
     reader.readAsDataURL(file);
   };
 
@@ -214,6 +223,7 @@ export default function EditorWizard({
 
       {/* Form Content */}
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        {mediaError && <p role="alert" className="rounded-xl border border-amber-500/30 p-3 text-sm text-amber-200">{mediaError}</p>}
         {step === 1 && (
           <div className="space-y-4 animate-fadeIn">
             <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-200 flex items-center justify-between gap-2">
@@ -839,7 +849,7 @@ export default function EditorWizard({
                   </label>
                   <div className="space-y-2">
                     {MUSIC_TRACKS.map((track) => {
-                      const isSelected = (data.musicTrackId || 'music-box') === track.id && !data.customAudioDataUrl;
+                      const isSelected = (data.musicTrackId || 'music-box') === track.id && !data.customAudio;
                       const isPlaying = playingPreviewTrack === track.id;
                       return (
                         <div
@@ -882,8 +892,10 @@ export default function EditorWizard({
                       <span>
                         {data.customAudioName ? `🎵 ${data.customAudioName}` : 'Subir mi propio archivo MP3 (Gratis)'}
                       </span>
-                      <input type="file" accept="audio/*" onChange={handleCustomAudioUpload} className="hidden" />
+                      <input aria-label="Seleccionar canción" type="file" accept="audio/mpeg,audio/mp4,audio/wav,audio/ogg,audio/webm,audio/aac,.mp3,.m4a,.wav,.ogg,.webm,.aac" onChange={handleCustomAudioUpload} disabled={readingAudio} className="hidden" />
                     </label>
+                    {readingAudio && <p role="status" className="text-xs text-slate-300 mt-2">Leyendo tu canción…</p>}
+                    {data.customAudio && <div className="mt-3 space-y-2"><p className="text-xs text-emerald-200">Canción seleccionada. Escúchala antes de compartir:</p><audio aria-label="Escuchar canción seleccionada" controls preload="metadata" src={data.customAudio} className="w-full"/><p className="text-[11px] text-slate-400">Se guardará en línea al abrir Compartir. Máximo 25 MB.</p></div>}
                   </div>
                 </div>
               )}

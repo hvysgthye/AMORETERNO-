@@ -85,3 +85,13 @@ Una vez publicado el enlace en producción:
 - Verificación: npm run build y npm test correctos (8 pruebas, incluyendo renderizado y revelación de los 45 HTML y contraste de 90 pares).
 - Navegador móvil 390x844: las 45 escenas abrieron con encabezado y sin desbordamiento horizontal. Pruebas de interacción representativas; no se certifican todos los flujos manuales.
 - Evidencia y referencias: replica/design/collection-upgrade.md y replica/clone-screens/keepsake-*.jpg.
+
+## Guardado real de regalos — 2026-10-27
+- El usuario autorizó específicamente almacenar fotos, canciones, voz y textos en Amor Eterno · Recuerdos (Sites/Cloudflare), con acceso a cada regalo mediante su enlace y sin API de listado.
+- Servicio: https://amor-eterno-recuerdos.airylarch2048.chatgpt.site
+- Proyecto Sites: appgprj_6ae146c6891c8191a10c2c4f559f89ba. Versión 1. Fuente: 7d1cbcf7669a1ee3948be79df2ee4ac282cb0249. Despliegue succeeded.
+- El frontend guarda archivos antes de ofrecer el enlace corto o QR; el destinatario carga la plantilla y archivos desde el servidor. Los enlaces dañados muestran error en lugar de abrir el candado.
+- Prueba real: imagen y audio sintéticos recuperados con bytes idénticos; plantilla Árbol; audio Range 206. Evidencia: evidence/sharing-live-result.json.
+- Navegador: se seleccionaron foto y WAV sintéticos, se generó un enlace de 47 caracteres en el entorno local y otra pestaña recuperó Árbol. QR disponible.
+- 15 pruebas automatizadas aprobadas, incluyendo lector QR independiente y las 45 selecciones de plantilla. npm audit --omit=dev: 0 vulnerabilidades. Compilación de producción correcta.
+- Los enlaces antiguos no pueden recuperar archivos que nunca se guardaron en línea; hay que abrir la creación original y volver a compartir.

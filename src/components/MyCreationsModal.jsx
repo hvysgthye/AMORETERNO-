@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { X, Heart, Clock, ExternalLink, Download, Trash2, Edit3, Sparkles } from 'lucide-react';
-import { getSavedCreations, removeCreationLocally, encodeDedicationToURL } from '../utils/shareHelper';
+import { getSavedCreations, removeCreationLocally } from '../utils/shareHelper';
+import { giftURL } from '../utils/cloudGifts';
 import { TEMPLATES } from '../data/templates';
 import { generateStandaloneHTML } from '../utils/htmlExporter';
 
-export default function MyCreationsModal({ isOpen, onClose, onLoadCreation }) {
+export default function MyCreationsModal({ isOpen, onClose, onLoadCreation, onShareCreation }) {
   const [creations, setCreations] = useState([]);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function MyCreationsModal({ isOpen, onClose, onLoadCreation }) {
               {creations.map((item) => {
                 const tpl = TEMPLATES.find((t) => t.id === item.templateId);
                 const title = item.data?.title || tpl?.name || 'Dedicatoria de Amor';
-                const shareUrl = encodeDedicationToURL(item.templateId, item.data);
+                const shareUrl = item.shareId ? giftURL(item.shareId) : null;
 
                 return (
                   <div
@@ -117,7 +118,7 @@ export default function MyCreationsModal({ isOpen, onClose, onLoadCreation }) {
                         <span>Editar</span>
                       </button>
 
-                      <a
+                      {shareUrl ? <a
                         href={shareUrl}
                         target="_blank"
                         rel="noreferrer"
@@ -126,6 +127,7 @@ export default function MyCreationsModal({ isOpen, onClose, onLoadCreation }) {
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
+                      : <button onClick={() => {onClose();onShareCreation(item.templateId,item.data);}} title="Guardar en línea y compartir" className="p-1.5 rounded-lg bg-slate-800 text-slate-200"><ExternalLink className="w-3.5 h-3.5"/></button>}
 
                       <button
                         onClick={() => handleDownload(item)}

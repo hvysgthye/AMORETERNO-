@@ -6,7 +6,7 @@ import { KEEPSAKE_DESIGNS } from '../src/data/keepsakeDesigns.js';
 
 // Produce the same original illustrations for the plain-HTML export. The
 // downloaded gift needs neither React nor a server to display these drawings.
-const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
+const server = await createServer({ server: { middlewareMode: true }, appType: 'custom', optimizeDeps: { noDiscovery: true, include: [] } });
 try {
   const { default: Artwork } = await server.ssrLoadModule('/src/components/templates/shared/KeepsakeArtwork.jsx');
   const artwork = Object.fromEntries(Object.keys(KEEPSAKE_DESIGNS).map(templateId => [

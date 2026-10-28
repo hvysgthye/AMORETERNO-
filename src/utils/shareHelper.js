@@ -20,7 +20,7 @@ export function encodeDedicationToURL(templateId, data) {
     // Keep every editable text/visibility field, including intentionally empty values.
     compactPayload.v = 2;
     compactPayload.fields = Object.fromEntries(Object.entries(data || {}).filter(([key, value]) =>
-      !['photo', 'photos', 'customAudio', 'voiceNote'].includes(key) &&
+      !['photo', 'photos', 'customAudio', 'customAudioDataUrl', 'voiceNote'].includes(key) &&
       (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number' ||
        (Array.isArray(value) && value.every(item => typeof item === 'number')))
     ));
@@ -37,7 +37,7 @@ export function encodeDedicationToURL(templateId, data) {
     return `${origin}${pathname}?mode=view&d=${base64}`;
   } catch (e) {
     console.error('Error encoding dedication to URL:', e);
-    return `${window.location.origin}${window.location.pathname}?t=${templateId}`;
+    throw new Error('No se pudo generar el enlace. Vuelve a guardar la dedicatoria.');
   }
 }
 
@@ -50,6 +50,8 @@ export function decodeDedicationFromURL() {
     const mode = params.get('mode'); // 'view' for recipient presentation mode
     const encoded = params.get('d');
     const templateParam = params.get('t');
+    const giftId = params.get('g');
+    if(giftId) return {giftId,isRecipientMode:true,templateId:null,data:null};
 
     if (encoded) {
       let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
@@ -84,6 +86,7 @@ export function decodeDedicationFromURL() {
       };
     }
 
+    if(mode === 'view') return {isRecipientMode:false,templateId:null,data:null,error:'Este enlace está incompleto. Pide a quien lo creó que vuelva a guardar y compartir el regalo.'};
     return {
       isRecipientMode: mode === 'view',
       templateId: null,
@@ -91,7 +94,7 @@ export function decodeDedicationFromURL() {
     };
   } catch (e) {
     console.error('Error decoding dedication from URL:', e);
-    return { isRecipientMode: false, templateId: null, data: null };
+    return { isRecipientMode: false, templateId: null, data: null, error: 'Este enlace está incompleto o dañado. Pide a quien lo creó que lo vuelva a compartir.' };
   }
 }
 
@@ -113,12 +116,13 @@ export function getTelegramShareURL(shareUrl, title = 'Una dedicatoria especial'
 /**
  * Saves a creation to local history.
  */
-export function saveCreationLocally(templateId, data) {
+export function saveCreationLocally(templateId, data, metadata = {}) {
   try {
     const list = getSavedCreations();
     const newEntry = {
       id: 'd_' + crypto.randomUUID(),
       templateId,
+      ...(metadata.shareId ? {shareId:metadata.shareId} : {}),
       title: data.title || 'Dedicatoria sin título',
       date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
       data

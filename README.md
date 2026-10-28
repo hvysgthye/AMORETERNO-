@@ -54,3 +54,12 @@ git log -5 --oneline
 ```
 
 Un commit local guarda una versión del código en este equipo. Para actualizar GitHub se necesita un push al repositorio remoto.
+
+
+## Compartir fotos y canciones
+
+Al abrir Compartir se guardan primero la dedicatoria, la plantilla elegida y sus archivos en el servicio de Amor Eterno · Recuerdos (Sites/Cloudflare), autorizado por el propietario. Solo al terminar aparecen Copiar, WhatsApp y QR. El destinatario recupera el regalo desde el servidor mediante un identificador corto.
+
+Los enlaces anteriores no pueden recuperar archivos que nunca se subieron. Abre el recuerdo original en el navegador donde se creó, selecciona las fotos/canción si ya no están disponibles y vuelve a compartir para crear un enlace nuevo.
+
+Detalles y límites: `backend/README.md`. Las variables de despliegue están en `.env.example`. No guardar claves privadas en variables `VITE_`.

@@ -56,8 +56,8 @@ export async function compressImageFile(file, maxDimension = 1200, quality = 0.8
 export function validateAudioFile(file, maxMB = 20) {
   if (!file) return { valid: false, error: 'No se seleccionó archivo.' };
   
-  const validTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/x-m4a', 'audio/mp4', 'audio/aac'];
-  const isAudioType = validTypes.includes(file.type) || file.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|aac)$/i.test(file.name);
+  const validTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/ogg', 'audio/m4a', 'audio/x-m4a', 'audio/mp4', 'audio/aac', 'audio/webm'];
+  const isAudioType = validTypes.includes(file.type) || /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(file.name);
   
   if (!isAudioType) {
     return { valid: false, error: 'Formato no soportado. Por favor sube un archivo MP3, WAV o M4A.' };

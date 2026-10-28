@@ -9,10 +9,13 @@ import RecipientView from './components/RecipientView';
 import { TEMPLATES } from './data/templates';
 import { generateStandaloneHTML } from './utils/htmlExporter';
 import { decodeDedicationFromURL } from './utils/shareHelper';
+import { fetchGift } from './utils/cloudGifts';
 
 const INITIAL_PARSED = (() => {
   try {
-    return decodeDedicationFromURL();
+    const parsed = decodeDedicationFromURL();
+    if(parsed.templateId && !TEMPLATES.some(t => t.id === parsed.templateId)) return {error:'La plantilla de este enlace no está disponible.',templateId:null,isRecipientMode:false,data:null};
+    return parsed;
   } catch (e) {
     return { isRecipientMode: false, templateId: 'candado', data: null };
   }
@@ -20,6 +23,9 @@ const INITIAL_PARSED = (() => {
 
 export default function App() {
   const [isRecipientMode, setIsRecipientMode] = useState(INITIAL_PARSED.isRecipientMode);
+  const [giftLoading, setGiftLoading] = useState(!!INITIAL_PARSED.giftId);
+  const [giftError, setGiftError] = useState(INITIAL_PARSED.error || '');
+  const [giftAttempt, setGiftAttempt] = useState(0);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isCreationsModalOpen, setIsCreationsModalOpen] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(INITIAL_PARSED.templateId || 'candado');
@@ -33,6 +39,21 @@ export default function App() {
     }
     return { ...tpl.defaults };
   });
+
+  useEffect(() => {
+    if(!INITIAL_PARSED.giftId) return;
+    const controller = new AbortController(); let cancelled = false;
+    setGiftLoading(true); setGiftError('');
+    fetchGift(INITIAL_PARSED.giftId, {signal:controller.signal}).then(gift => {
+      if(cancelled) return;
+      const template = TEMPLATES.find(t => t.id === gift.templateId);
+      if(!template) throw new Error('La plantilla de este regalo no está disponible.');
+      setSelectedTemplateId(gift.templateId);
+      setTemplateData({...template.defaults,...gift.data});
+      setIsRecipientMode(true); setGiftLoading(false);
+    }).catch(error => {if(!cancelled && error.name !== 'AbortError') {setGiftLoading(false);setGiftError(error.message);}});
+    return () => {cancelled=true;controller.abort();};
+  }, [giftAttempt]);
 
   // Dynamic document title
   useEffect(() => {
@@ -77,6 +98,15 @@ export default function App() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
+  if(giftLoading || giftError) return <main className="min-h-screen flex items-center justify-center p-6 bg-[#101119] text-[#f7f0e8]">
+    <div className="max-w-md text-center space-y-5">
+      <h1 className="text-3xl font-serif-romance">{giftLoading ? 'Abriendo tu sorpresa…' : 'No pudimos abrir este regalo'}</h1>
+      <p role={giftError ? 'alert' : 'status'} className="leading-relaxed text-slate-300">{giftError || 'Estamos recuperando la dedicatoria y sus recuerdos guardados.'}</p>
+      {giftError && INITIAL_PARSED.giftId && <button onClick={() => setGiftAttempt(value => value + 1)} className="px-5 py-3 rounded-xl bg-rose-700">Volver a intentar</button>}
+      {giftError && <a className="block underline" href={window.location.pathname}>Ver diseños</a>}
+    </div>
+  </main>;
 
   // If in Recipient Presentation Mode (opened by partner/recipient via shared link)
   if (isRecipientMode) {
@@ -149,6 +179,7 @@ export default function App() {
         isOpen={isCreationsModalOpen}
         onClose={() => setIsCreationsModalOpen(false)}
         onLoadCreation={handleLoadSavedCreation}
+        onShareCreation={(id, saved) => {handleLoadSavedCreation(id, saved);setIsShareModalOpen(true);}}
       />
     </div>
   );
