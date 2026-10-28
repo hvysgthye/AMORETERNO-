@@ -1,6 +1,6 @@
 // Audio Engine: Supports Custom Uploaded MP3/WAV/Audio Files & Procedural Synthesizers
 
-class SoundEngine {
+export class SoundEngine {
   constructor() {
     this.ctx = null;
     this.bgmPlaying = false;
@@ -13,6 +13,7 @@ class SoundEngine {
   init() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if(!AudioCtx) return;
       this.ctx = new AudioCtx();
       this.masterGain = this.ctx.createGain();
       this.masterGain.gain.setValueAtTime(0.4, this.ctx.currentTime);
@@ -48,6 +49,12 @@ class SoundEngine {
     return false;
   }
 
+  // Templates use this general click effect before revealing letters, petals
+  // and photos. Sound must never prevent that state change.
+  playClick() {
+    try { this.playDialClick(); } catch {}
+  }
+
   pauseCustomAudio() {
     if (this.customAudioEl) {
       this.customAudioEl.pause();
@@ -56,17 +63,21 @@ class SoundEngine {
 
   toggleMusicTrack(customUrl, onStateChange) {
     if (customUrl) {
+      this.toggleRomanticBGM(false);
       if (!this.customAudioEl || this.customAudioUrl !== customUrl) {
         this.setCustomAudio(customUrl);
       }
       if (this.customAudioEl.paused) {
-        this.playCustomAudio();
-        if (onStateChange) onStateChange(true);
+        const audio = this.customAudioEl;
+        audio.play().then(() => {
+          if(this.customAudioEl === audio && onStateChange) onStateChange(true);
+        }).catch(() => { if(onStateChange) onStateChange(false); });
       } else {
         this.pauseCustomAudio();
         if (onStateChange) onStateChange(false);
       }
     } else {
+      this.pauseCustomAudio();
       // Fallback to procedural music box
       this.toggleRomanticBGM(!this.bgmPlaying, onStateChange);
     }
@@ -75,6 +86,7 @@ class SoundEngine {
   // Mechanical Dial Click Sound
   playDialClick() {
     this.init();
+    if(!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = 'triangle';
@@ -91,6 +103,7 @@ class SoundEngine {
   // Unlocking Shackle Pop & Harmonious Chime
   playUnlockSuccess() {
     this.init();
+    if(!this.ctx) return;
     const now = this.ctx.currentTime;
     const osc1 = this.ctx.createOscillator();
     const gain1 = this.ctx.createGain();
@@ -122,6 +135,7 @@ class SoundEngine {
   // Laser scanner hum for Fingerprint
   playLaserHum(progress) {
     this.init();
+    if(!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = 'sawtooth';
@@ -137,7 +151,6 @@ class SoundEngine {
 
   // Procedural Romantic Celestial Music Box Theme
   toggleRomanticBGM(enable, onStateChange) {
-    this.init();
     if (!enable) {
       this.bgmPlaying = false;
       if (this.bgmInterval) {
@@ -147,6 +160,9 @@ class SoundEngine {
       if (onStateChange) onStateChange(false);
       return;
     }
+
+    this.init();
+    if(!this.ctx) {if(onStateChange) onStateChange(false);return;}
 
     if (this.bgmPlaying) return;
     this.bgmPlaying = true;

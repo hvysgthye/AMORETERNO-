@@ -95,3 +95,5 @@ Una vez publicado el enlace en producción:
 - Navegador: se seleccionaron foto y WAV sintéticos, se generó un enlace de 47 caracteres en el entorno local y otra pestaña recuperó Árbol. QR disponible.
 - 15 pruebas automatizadas aprobadas, incluyendo lector QR independiente y las 45 selecciones de plantilla. npm audit --omit=dev: 0 vulnerabilidades. Compilación de producción correcta.
 - Los enlaces antiguos no pueden recuperar archivos que nunca se guardaron en línea; hay que abrir la creación original y volver a compartir.
+- Comprobación adicional: se corrigió sound.playClick inexistente, que impedía abrir cartas en varias plantillas. El destinatario abrió Árbol y la carta mostró la foto cargada desde el servidor. El botón de música confirmó reproducción tras resolver play().
+- Validación final: 17 pruebas aprobadas y compilación correcta.
