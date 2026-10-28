@@ -33,3 +33,5 @@ Thumbs.db
 .env.production.local
 
 .vercel
+videos/
+scratch/

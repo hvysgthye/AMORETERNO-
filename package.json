@@ -10,7 +10,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "vite build && node deploy_ghpages.cjs"
+    "deploy": "vite build && node deploy_ghpages.cjs",
+    "record:template": "node scripts/record-template.mjs",
+    "publish:social": "node scripts/publish-social.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
@@ -24,6 +26,7 @@
     "autoprefixer": "^10.4.20",
     "jsqr": "^1.4.0",
     "postcss": "^8.4.49",
+    "puppeteer-core": "^25.16.0",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.7"
   }
