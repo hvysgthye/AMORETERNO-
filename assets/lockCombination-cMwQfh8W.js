@@ -1,0 +1,1 @@
+function u(n){return[14,2,24].map((e,r)=>{var m;const o=n==null?void 0:n["combo"+(r+1)],i=Number(o!==void 0&&o!==""?o:((m=n==null?void 0:n.combo)==null?void 0:m[r])??e);return Number.isFinite(i)?Math.min(99,Math.max(0,Math.trunc(i))):e})}export{u as r};

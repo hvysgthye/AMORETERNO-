@@ -1,0 +1,1 @@
+import{a as u}from"./icons-DnAbZzuI.js";function n(){const e=u.useRef(new Set);return u.useEffect(()=>()=>{for(const t of e.current)clearTimeout(t);e.current.clear()},[]),(t,o)=>{const r=setTimeout(()=>{e.current.delete(r),t()},o);return e.current.add(r),r}}export{n as u};
